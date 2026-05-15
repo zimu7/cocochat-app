@@ -1,0 +1,237 @@
+{   
+    "latest": {"version": "0.2.114", "build_num": 84},
+    "logs":  [
+        {"time": 1729352969379, "version": "0.2.114", "build_num": 84, "updates": [
+            "- fix: channel settings page error."
+            ]},
+        {"time": 1728820814468, "version": "0.2.113", "build_num": 83, "updates": [
+            "- fix: channel creation error for admins.",
+            "- fix: channel setting items compatibility issues."
+            ]},
+        {"time": 1728305438570, "version": "0.2.112", "build_num": 82, "updates": [
+            "- add: some server and channel setting items."
+            ]},
+        {"time": 1719630263663, "version": "0.2.111", "build_num": 81, "updates": [
+            "- fix: potential failure when creating channels."
+            ]},
+        {"time": 1699415857043, "version": "0.2.110", "build_num": 80, "updates": [
+            "- fix: temporarily disable WebSocket due to unstable connection."
+            ]},
+        {"time": 1698950211491, "version": "0.2.109", "build_num": 79, "updates": [
+            "- add: WebSocket migration."
+            ]},
+        {"time": 1694224576381, "version": "0.2.108", "build_num": 78, "updates": [
+            "- attempt fix: potential contact list crash.",
+            "- fix: username overflow in message tiles.",
+            "- fix: an issue in server version comparator."
+            ]},
+        {"time": 1692923579847, "version": "0.2.107", "build_num": 77, "updates": [
+            "- fix: some contact list updating and display issues.",
+            "- fix: minor UI fixes."
+            ]},
+        {"time": 1692251129635, "version": "0.2.106", "build_num": 76, "updates": [
+            "- fix: possible avatar error in server switch drawer.",
+            "- feature: change password in settings."
+            ]},
+        {"time": 1690587709862, "version": "0.2.105", "build_num": 75, "updates": [
+            "- fix: channel invitation link generation permissions and link port display issue.",
+            "- fix: server URL validation issue.",
+            "- fix: channel members page might show an incomplete member list.",
+            "- fix: some other known bug fixes."
+            ]},
+        {"time": 1690585098674, "version": "0.2.104", "build_num": 74, "updates": [
+            "- feature: QR code scanning supported with images in chats and from phone gallery.",
+            "- feature: jump to corresponding server and chat when jumping from push notifications.",
+            "- fix: some known bug fixes."
+            ]},
+        {"time": 1690146946396, "version": "0.2.103", "build_num": 73, "updates": [
+            "- refactor: swipe left / long press to chat UX improved.",
+            "- refactor: error message display improvements.",
+            "- fix: disable textfield if user is blocked.",
+            "- fix: user list not complete issue.",
+            "- fix: other known issue fixes."
+            ]},
+        {"time": 1688437475039, "version": "0.2.102", "build_num": 72, "updates": [
+            "- add: Swipe left (iOS) or Long Press (Android) actions to chat tiles.",
+            "- add: Search by name in contact search.",
+            "- fix: chat update issue before initial connection completes.",
+            "- fix: minor UI color changes.",
+            "- fix: mute setting might not work correctly.",
+            "- fix: other known issue fixes."
+            ]},
+        {"time": 1687812347466, "version": "0.2.101", "build_num": 71, "updates": [
+            "- fix: information updating issue in chats which are pushed from contact detail page.",
+            "- fix: unread count display issue in chat bar.",
+            "- fix: unread count synchronization issue."
+            ]},
+        {"time": 1687740444611, "version": "0.2.100", "build_num": 70, "updates": [
+            "- add: new realtime response to server settings (server name, description, online status switch etc.",
+            "- refactor: new user settings read and storage strategy for better performance.",
+            "- fix: full screen image does not show up when tapped.",
+            "- fix: other bug fixes."
+            ]},
+        {"time": 1686970439989, "version": "0.2.98", "build_num": 68, "updates": [
+            "- refactor: remove 'Clear local data' button to avoid a notification issue.",
+            "- fix: default language might be mistakenly set to Simplified Chinese.",
+            "- fix: archive content loading status issue.",
+            "- fix: some video bubble fixes.",
+            "- fix: other bug fixes."
+            ]},
+        {"time": 1686678311279, "version": "0.2.97", "build_num": 67, "updates": [
+            "- add: mute and pin chats.",
+            "- fix: chats might be loaded slowly due to a file fetch error.",
+            "- fix: other bug fixes."
+            ]},
+        {"time": 1686415712607, "version": "0.2.96", "build_num": 66, "updates": [
+            "- fix: multiple bug fixes."          
+            ]},
+        {"time": 1685818445886, "version": "0.2.95", "build_num": 65, "updates": [
+            "- add: specified bubble for video messages.",
+            "- add: show url and its hyperlink for text messages.",
+            "- refactor: QR code scanning and invitation link handling.",
+            "- refactor: minor improvement on video page.",
+            "- fix: images might be mistakenly shown deleted.",
+            "- fix: one issue that may cause unsuccessful update of auth tokens.",
+            "- fix: a known retry issue that may cause unsuccessful connection retries."
+            ]},
+        {"time": 1685330425671, "version": "0.2.94", "build_num": 64, "updates": [
+            "- fix: contact status update error."
+        ]},
+        {"time": 1685176021522, "version": "0.2.93", "build_num": 63, "updates": [
+            "- add: right align messages sent by yourself (settings in Web client only).",
+            "- add: contact mode (settings in Web client only).",
+            "- add: remove user from server button in contact page for admins.",
+            "- add: pinch to zoom in image viewer.",
+            "- refactor: performance improvements on message list.",
+            "- refactor: QR code scan and invitation link strategy.",
+            "- fix: language changed to on-device settings only.",
+            "- fix: camera and microphone permission error in image selector.",
+            "- fix: some other issues."
+        ]},
+        {"time": 1684871945838, "version": "0.2.91", "build_num": 61, "updates": [
+            "- fix: login keyboard focus issues."
+        ]},
+        {"time": 1684548451664, "version": "0.2.90", "build_num": 60, "updates": [
+            "- fix: messages might be duplicated.",
+            "- fix: history message fetch issue in DMs.",
+            "- fix: resend feature for unsuccessful messages in chats.",
+            "- add: save draft for chats.",
+            "- refactor: performance improvements."
+        ]},
+        {"time": 1684390702590, "version": "0.2.88", "build_num": 58, "updates": [
+            "- fix: preliminary network fixes.",
+            "- fix: direct messages might not show up after initial data loading."
+        ]},
+        {"time": 1684300834464, "version": "0.2.87", "build_num": 57, "updates": [
+            "- add: fetch history messages in channels before user is registered.",
+            "- fix: some database and performance fixes."
+        ]},
+        {"time": 1683764399889, "version": "0.2.86", "build_num": 56, "updates": [
+            "- fix: error in login process"
+        ]},
+        {"time": 1683679410395, "version": "0.2.85", "build_num": 55, "updates": [
+            "- refactor: performance improvements.",
+            "- add: audio messages."
+        ]},
+        {"time": 1680948278556, "version": "0.2.80", "build_num": 50, "updates": [
+            "- refactor: avatar data storage and fetching strategy.",
+            "- fix: HEIF image sending issue.",
+            "- fix: magic link parameter parsing issue."
+        ]},
+        {"time": 1679269244128, "version": "0.2.79", "build_num": 49, "updates": [
+            "- fix: messages might still appear when they are deleted."
+        ]},
+        {"time": 1679011447995, "version": "0.2.77", "build_num": 47, "updates": [
+            "- fix: gif image messages do not animate.",
+            "- fix: potential app stall when fetching user avatars."
+        ]},
+        {"time": 1678584354314, "version": "0.2.76", "build_num": 46, "updates": [
+            "- fix: disable auto-delete message for chats with user themselves.",
+            "- fix: some internationalization issues.",
+            "- fix: self-build preparation."
+        ]},
+        {"time": 1678429805352, "version": "0.2.75", "build_num": 45, "updates": [
+            "- fix: issue when doing registration with an app without login status."
+        ]},
+        {"time": 1678243888670, "version": "0.2.74", "build_num": 44, "updates": [
+            "- fix: license issue when sending files in private chats."
+        ]},
+        {"time": 1677861623857, "version": "0.2.73", "build_num": 43, "updates": [
+            "- fix: minor change in status monitoring strategy.",
+            "- fix: license issue in chat message sending."
+        ]},
+        {"time": 1677530780273, "version": "0.2.72", "build_num": 42, "updates": [
+            "- add: customizable url version.",
+            "- add: scan qr code to login.",
+            "- fix: token issues in registration process.",
+            "- fix: message deletion process."
+        ]},
+        {"time": 1676942578905, "version": "0.2.71", "build_num": 41, "updates": [
+            "- fix: network issue on previous versions."
+        ]},
+        {"time": 1675495401212, "version": "0.2.69", "build_num": 39, "updates": [
+            "- fix: multiple bug fixes and performance improvement.",
+            "- add: Push notification re-register page."         
+        ]},
+        {"time": 1675157838355, "version": "0.2.68", "build_num": 38, "updates": [
+            "- fix: image sending status issue."            
+        ]},
+        {"time": 1674267919945, "version": "0.2.67", "build_num": 37, "updates": [
+            "- refactor: image widget, support viewing all images in a chat.",
+            "- add: support to new server version with channel creation api change."
+        ]},
+        {"time": 1673530707447, "version": "0.2.66", "build_num": 36, "updates": [
+            "- fix: bugs related with FCM Push Notifications."
+        ]},
+        {"time": 1673224599051, "version": "0.2.65", "build_num": 35, "updates": [
+            "- fix: bugs related with auto-delete messages."
+        ]},
+        {"time": 1673183104078, "version": "0.2.64", "build_num": 34, "updates": [
+            "- fix: bugs related with auto-delete messages."
+        ]},
+        {"time": 1672993881513, "version": "0.2.63", "build_num": 33, "updates": [
+            "- add: auto-delete messages.",
+            "- fix: some simplified Chinese translation."
+        ]},
+        {"time": 1672284142106, "version": "0.2.62", "build_num": 32, "updates": [
+            "- add: simplified Chinese.",
+            "- add: improvement on message retrieving."
+        ]},
+        {"time": 1672040425605, "version": "0.2.61", "build_num": 31, "updates": [
+            "- add: invitation link QR code and scanning.",
+            "- add: potential error message output during login."
+        ]},
+        {"time": 1670977149151, "version": "0.2.60", "build_num": 30, "updates": [
+            "- fix: UI in auth pages.",
+            "- fix: http websites does not open in Android.",
+            "- fix: UI error after deleting account.",
+            "- fix: data interference between servers if data is being loaded."
+        ]},
+        {"time": 1670734049670, "version": "0.2.59", "build_num": 29, "updates": [
+            "- fix: disable mentions and solve cursor issue in DMs."
+        ]},
+        {"time": 1670658669903, "version": "0.2.58", "build_num": 28, "updates": [
+            "- fix: improve online state stability."
+        ]},
+        {"time": 1670377803572, "version": "0.2.57", "build_num": 27, "updates": [
+            "- fix: archive messages might stay in loading status."
+        ]},
+        {"time": 1670367008359, "version": "0.2.56", "build_num": 26, "updates": [
+            "- fix: minor issues in invitation link validation."
+        ]},
+        {"time": 1670303386582, "version": "0.2.55", "build_num": 25, "updates": [
+            "- add: check updates and changelog.",
+            "- fix: disable super admin (uid == 1) access to deleting their account.",
+            "- fix: some files do not open due to path and file name issues.",
+            "- fix: add channel list comparison when connection establishes, delete extra ones if necessary."
+        ]},
+        {"time": 1670009545158, "version": "0.2.54", "build_num": 24, "updates": [
+            "- fix: invitation link validation might output wrongly with localhost server deployment."
+        ]},
+        {"time": 1669619886055, "version": "0.2.53", "build_num": 23, "updates": [
+            "- fix: check invitation link validity before jumping to sign up page."
+        ]}
+    ]
+}
+
+

@@ -1,0 +1,115 @@
+// UI constants
+const double barHeight = 56;
+
+// Enums
+enum ChatType { channel, dm }
+
+enum LoginType { password, magiclink }
+
+/// All types that can be sent from TextField widget, including cancelling.
+///
+/// Each type corresponds to an API.
+/// Markdown not included as it is currently not supported by phones according
+/// to development plan.
+enum SendType { normal, file, edit, reply, audio, cancel }
+
+enum MsgReactionType { edit, action, delete, none }
+
+enum MsgStatus { fail, success, sending, readyToSend, deleted }
+
+enum LoadingStatus { loading, success, disconnected }
+
+enum PersConnStatus { init, connecting, successful, disconnected }
+
+enum TokenStatus { init, connecting, successful, unauthorized, disconnected }
+
+enum ButtonStatus { normal, inProgress, success, error }
+
+enum InvitationLinkPreparationStatus { successful, networkError, invalid }
+
+// ignore: constant_identifier_names
+enum ChatLayoutMode { Left, SelfRight }
+
+typedef LoadingAware = Future<void> Function(LoadingStatus status);
+typedef SseAware = Future<void> Function(PersConnStatus status);
+typedef TokenAware = Future<void> Function(TokenStatus status);
+
+/// [MsgContentType] is consistant with server definition.
+/// Original String consts are defined separately.
+enum MsgContentType { text, markdown, file, audio, archive }
+
+/// [MsgDetailType] is consistant with server definition.
+enum MsgDetailType { normal, reaction, reply }
+
+const typeText = "text/plain";
+const typeMarkdown = "text/markdown";
+const typeFile = "cocochat/file";
+const typeArchive = "cocochat/archive";
+const typeAudio = "cocochat/audio";
+
+/// Email RegEx from https://www.w3.org/TR/2012/WD-html-markup-20120329/input.email.html
+const urlRegEx =
+    r'''(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/="'`]*)''';
+
+const List<String> audioExts = [
+  "mp3",
+  "wav",
+  "aac",
+  "wma",
+  "amr",
+  "ogg",
+  "midi"
+];
+const List<String> imageExts = [
+  "jpg",
+  "png",
+  "gif",
+  "webp",
+  "tiff",
+  "psd",
+  "raw",
+  "bmp",
+  "heif",
+  "indd",
+  "jpeg",
+  "svg"
+];
+
+const List<String> videoExts = [
+  "webm",
+  "mkv",
+  "flv",
+  "avi",
+  "mov",
+  "qt",
+  "wmv",
+  "rm",
+  "rmvb",
+  "mp4",
+  "m4p",
+  "m4v",
+  "mpeg",
+  "flv"
+];
+
+const List<String> codeExts = [
+  "c",
+  "class",
+  "cpp",
+  "cs",
+  "dtd",
+  "fla",
+  "h",
+  "java",
+  "lua",
+  "m",
+  "pl",
+  "py",
+  "sh",
+  "sln",
+  "swift",
+  "vb",
+  "json"
+];
+
+const useCircleAvatar = true;

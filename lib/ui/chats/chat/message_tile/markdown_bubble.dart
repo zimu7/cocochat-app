@@ -1,0 +1,38 @@
+import 'package:flutter/material.dart';
+import 'package:cocochat_app/l10n/app_localizations.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:cocochat_app/shared_funcs.dart';
+import 'package:cocochat_app/ui/app_colors.dart';
+
+class MarkdownBubble extends StatelessWidget {
+  final String markdownText;
+  final bool edited;
+
+  const MarkdownBubble({super.key, required this.markdownText, this.edited = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(children: [
+      MarkdownBody(
+        data: markdownText,
+        selectable: true,
+        styleSheet: MarkdownStyleSheet(
+            a: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                color: AppColors.coolGrey700)),
+        onTapLink: (text, url, title) {
+          if (url != null) {
+            SharedFuncs.appLaunchUrl(Uri.parse(url));
+          }
+        },
+      ),
+      if (edited)
+        Text(" (${AppLocalizations.of(context)!.edited})",
+            style: TextStyle(
+                fontSize: 14,
+                color: AppColors.navLink,
+                fontWeight: FontWeight.w400))
+    ]);
+  }
+}

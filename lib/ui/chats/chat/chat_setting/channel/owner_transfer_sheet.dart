@@ -1,0 +1,166 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:cocochat_app/api/lib/group_api.dart';
+import 'package:cocochat_app/api/models/group/group_update_request.dart';
+import 'package:cocochat_app/app.dart';
+import 'package:cocochat_app/shared_funcs.dart';
+import 'package:cocochat_app/ui/app_text_styles.dart';
+import 'package:cocochat_app/dao/init_dao/group_info.dart';
+import 'package:cocochat_app/dao/init_dao/user_info.dart';
+import 'package:cocochat_app/services/file_handler.dart';
+import 'package:cocochat_app/ui/app_colors.dart';
+import 'package:cocochat_app/ui/contact/contact_list.dart';
+import 'package:cocochat_app/ui/widgets/sheet_app_bar.dart';
+import 'package:cocochat_app/l10n/app_localizations.dart';
+
+class OwnerTransferSheet extends StatefulWidget {
+  final GroupInfoM groupInfoM;
+
+  const OwnerTransferSheet({super.key, required this.groupInfoM});
+
+  @override
+  State<OwnerTransferSheet> createState() => _OwnerTransferSheetState();
+}
+
+class _OwnerTransferSheetState extends State<OwnerTransferSheet> {
+  final ValueNotifier<bool> _busyNotifier = ValueNotifier(false);
+  final ValueNotifier<List<int>> _selectNotifier = ValueNotifier([]);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SheetAppBar(
+          title: Text(AppLocalizations.of(context)!.transferOwnership,
+              style: AppTextStyles.titleLarge),
+          leading: CupertinoButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.close, color: AppColors.grey97)),
+          actions: [
+            ValueListenableBuilder<bool>(
+                valueListenable: _busyNotifier,
+                builder: (context, isBusy, _) {
+                  if (isBusy) {
+                    return Row(
+                      children: [
+                        CupertinoActivityIndicator(),
+                        CupertinoButton(
+                            onPressed: () {},
+                            child: Text(AppLocalizations.of(context)!.done,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 17,
+                                    color: AppColors.grey200)))
+                      ],
+                    );
+                  }
+                  return CupertinoButton(
+                      onPressed: () async {
+                        _busyNotifier.value = true;
+                        if (await _transferOwner() && await _leave()) {
+                          _busyNotifier.value = false;
+                          if (mounted) {
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                          }
+                          return;
+                        }
+                        if (mounted) {
+                          Navigator.of(context).pop();
+                          _busyNotifier.value = false;
+                        }
+                      },
+                      child: Text(AppLocalizations.of(context)!.done,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                              color: AppColors.primaryBlue)));
+                })
+          ],
+        ),
+        Expanded(
+          child: FutureBuilder<List<UserInfoM>?>(
+              future: _getUsers(),
+              builder: ((context, snapshot) {
+                if (snapshot.hasData) {
+                  return ContactList(
+                    initUserList: snapshot.data!,
+                    ownerUid: widget.groupInfoM.groupInfo.owner,
+                    onlyShowInitList: true,
+                    onTap: (userInfoM) {
+                      if (_selectNotifier.value.contains(userInfoM.uid)) {
+                        _selectNotifier.value = [];
+                      } else {
+                        _selectNotifier.value = [userInfoM.uid];
+                      }
+                    },
+                    preSelectUidList: [widget.groupInfoM.groupInfo.owner ?? -1],
+                    enablePreSelectAction: false,
+                    enableSelect: true,
+                    enableUpdate: false,
+                    selectNotifier: _selectNotifier,
+                  );
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return Center(child: CupertinoActivityIndicator());
+                } else {
+                  return SizedBox.shrink();
+                }
+              })),
+        ),
+      ],
+    );
+  }
+
+  Future<List<UserInfoM>?> _getUsers() async {
+    final GroupInfoM? groupInfoM =
+        await GroupInfoDao().getGroupByGid(widget.groupInfoM.gid);
+    if (groupInfoM == null) {
+      return null;
+    }
+
+    return GroupInfoDao().getUserListByGid(widget.groupInfoM.gid,
+        groupInfoM.isPublic, groupInfoM.groupInfo.members ?? []);
+  }
+
+  Future<bool> _transferOwner() async {
+    if (_selectNotifier.value.isEmpty || _selectNotifier.value.length != 1) {
+      return false;
+    }
+
+    final req = GroupUpdateRequest(owner: _selectNotifier.value.first);
+    try {
+      final groupApi = GroupApi();
+      final res = await groupApi.updateGroup(widget.groupInfoM.gid, req);
+      if (res.statusCode == 200) {
+        // success
+        return true;
+      }
+    } catch (e) {
+      App.logger.severe(e);
+    }
+    return false;
+  }
+
+  Future<bool> _leave() async {
+    try {
+      final groupApi = GroupApi();
+      final res = await groupApi.leaveGroup(widget.groupInfoM.gid);
+      if (res.statusCode == 200) {
+        await FileHandler.singleton.deleteChatDirectory(
+            SharedFuncs.getChatId(gid: widget.groupInfoM.gid)!);
+        return true;
+      }
+    } catch (e) {
+      App.logger.severe(e);
+    }
+    return false;
+  }
+}

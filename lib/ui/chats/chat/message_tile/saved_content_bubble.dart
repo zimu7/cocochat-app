@@ -1,0 +1,114 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:cocochat_app/l10n/app_localizations.dart';
+import 'package:cocochat_app/api/models/msg/msg_archive/archive_msg.dart';
+import 'package:cocochat_app/app.dart';
+import 'package:cocochat_app/app_consts.dart';
+import 'package:cocochat_app/services/file_handler.dart';
+import 'package:cocochat_app/ui/chats/chat/message_tile/file_bubble.dart';
+import 'package:cocochat_app/ui/chats/chat/message_tile/image_bubble/image_bubble.dart';
+import 'package:cocochat_app/ui/chats/chat/message_tile/image_bubble/image_gallery_page.dart';
+import 'package:cocochat_app/ui/chats/chat/message_tile/image_bubble/single_image_item.dart';
+import 'package:cocochat_app/ui/chats/chat/message_tile/markdown_bubble.dart';
+import 'package:cocochat_app/ui/chats/chat/message_tile/text_bubble.dart';
+
+class SavedContentBubble extends StatelessWidget {
+  final ArchiveMsg archiveMsg;
+  final String archiveId;
+  final Future<File?> Function(int, String, int, bool) getSavedFiles;
+
+  /// Saved text plain messages do not include replies. Only normal msgs.
+  /// Saved msgs do not include [edited] info.
+  const SavedContentBubble(this.archiveId, this.archiveMsg, this.getSavedFiles, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    String errorMsg = "Unsupported type.";
+    switch (archiveMsg.contentType) {
+      case typeText:
+        return TextBubble(
+            content:
+                archiveMsg.content ?? AppLocalizations.of(context)!.noContent,
+            edited: false,
+            hasMention: true,
+            enableShowMoreBtn: true,
+            maxLines: 10);
+      case typeMarkdown:
+        return MarkdownBubble(
+            markdownText:
+                archiveMsg.content ?? AppLocalizations.of(context)!.noContent,
+            edited: false);
+      case typeFile:
+        if (archiveMsg.isImageMsg) {
+          // Only show thumb in chat list.
+          if (archiveMsg.thumbnailId != null) {
+            return FutureBuilder<File?>(
+                // Get thumb of an image archive msg.
+                future: getSavedFiles(App.app.userDb!.uid, archiveId,
+                    archiveMsg.thumbnailId!, false),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    return VoceImageBubble(
+                        imageFile: snapshot.data!,
+                        getImageList: () async {
+                          return ImageGalleryData(imageItemList: [
+                            SingleImageGetters(
+                              getInitImageFile: () async {
+                                final imageFile = await getSavedFiles(
+                                    App.app.userDb!.uid,
+                                    archiveId,
+                                    archiveMsg.fileId!,
+                                    false);
+                                if (imageFile != null) {
+                                  return SingleImageData(
+                                      imageFile: imageFile, isOriginal: true);
+                                }
+                                return null;
+                              },
+                            )
+                          ], initialPage: 0);
+                        });
+                  } else {
+                    return TextBubble(
+                        content: archiveMsg.content ??
+                            AppLocalizations.of(context)!.noContent,
+                        edited: false,
+                        hasMention: false);
+                  }
+                });
+          } else {
+            errorMsg = "Unsupported Image.";
+          }
+        } else {
+          // Only show file tile in msg list. Raw file won't be saved to db.
+          String? name = archiveMsg.properties?["name"];
+          int? size = archiveMsg.properties?["size"];
+
+          if (name != null && size != null) {
+            return FileBubble(
+              filePath: archiveId,
+              name: name,
+              size: size,
+              getLocalFile: () => FileHandler.singleton.getLocalSavedItemsFile(
+                  App.app.userDb!.uid, archiveId, archiveMsg.fileId!, name),
+              getFile: (onProgress) async {
+                return FileHandler.singleton.getSavedItemsFile(
+                    App.app.userDb!.uid,
+                    archiveId,
+                    archiveMsg.fileId!,
+                    name,
+                    onProgress);
+              },
+            );
+          }
+        }
+        break;
+      default:
+    }
+    return TextBubble(
+        content: "$errorMsg, ${archiveMsg.contentType}",
+        edited: false,
+        hasMention: false);
+  }
+}

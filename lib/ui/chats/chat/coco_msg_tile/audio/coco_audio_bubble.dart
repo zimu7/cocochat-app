@@ -1,0 +1,81 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:cocochat_app/models/ui_models/audio_info.dart';
+import 'package:cocochat_app/models/ui_models/msg_tile_data.dart';
+import 'package:cocochat_app/ui/chats/chat/coco_msg_tile/audio/coco_audio_progress_bar.dart';
+import 'package:cocochat_app/ui/chats/chat/coco_msg_tile/empty_data_placeholder.dart';
+
+class VoceAudioBubble extends StatefulWidget {
+  final MsgTileData? tileData;
+
+  final AudioInfo? audioInfo;
+
+  final bool rightAlign;
+
+  final double? height;
+
+  VoceAudioBubble.tileData(
+      {super.key, required MsgTileData this.tileData, this.rightAlign = false})
+      : height = null,
+        audioInfo = tileData.audioInfo;
+
+  const VoceAudioBubble.data(
+      {super.key, this.audioInfo, this.rightAlign = false, this.height = 36})
+      : tileData = null;
+
+  @override
+  State<VoceAudioBubble> createState() => _VoceAudioBubbleState();
+}
+
+class _VoceAudioBubbleState extends State<VoceAudioBubble>
+    with SingleTickerProviderStateMixin {
+  AudioInfo? audioInfo;
+
+  @override
+  initState() {
+    super.initState();
+
+    if (widget.tileData != null && widget.tileData!.needSecondaryPrepare) {
+      widget.tileData!.secondaryPrepare().then((value) {
+        setState(() {
+          audioInfo = widget.tileData!.audioInfo;
+        });
+      });
+    } else {
+      audioInfo = widget.audioInfo;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (audioInfo != null) {
+      return FractionallySizedBox(
+          widthFactor: calAudioBubbleWidthFactor(audioInfo!.duration),
+          child: VoceProgressBar(
+              player: audioInfo!.player,
+              duration: audioInfo!.duration,
+              textAlignment: getTextAlignment(),
+              height: widget.height ?? 36));
+    } else {
+      return const EmptyDataPlaceholder();
+    }
+  }
+
+  double calAudioBubbleWidthFactor(int millisecs) {
+    double factor = millisecs / 30000;
+    if (factor < 0.3) {
+      return 0.3;
+    } else if (factor > 1) {
+      return 1;
+    } else {
+      return factor;
+    }
+  }
+
+  AlignmentGeometry getTextAlignment() {
+    if (widget.tileData != null && widget.rightAlign) {
+      return Alignment.centerRight;
+    }
+    return Alignment.centerLeft;
+  }
+}

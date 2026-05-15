@@ -1,0 +1,138 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
+import 'package:cocochat_app/api/lib/dio_util.dart';
+import 'package:cocochat_app/api/models/admin/system/sys_common_info.dart';
+import 'package:cocochat_app/api/models/admin/system/sys_org_info.dart';
+import 'package:cocochat_app/app.dart';
+
+class AdminSystemApi {
+  late final String _baseUrl;
+
+  AdminSystemApi({String? serverUrl}) {
+    final url = serverUrl ?? App.app.chatServerM.fullUrl;
+    _baseUrl = "$url/api/admin/system";
+  }
+
+  Future<Response<String>> getServerVersion() async {
+    final dio = DioUtil(baseUrl: _baseUrl);
+    final res = await dio.get("/version");
+
+    var newRes = Response<String>(
+        headers: res.headers,
+        requestOptions: res.requestOptions,
+        isRedirect: res.isRedirect,
+        statusCode: res.statusCode,
+        statusMessage: res.statusMessage,
+        redirects: res.redirects,
+        extra: res.extra);
+
+    if (res.statusCode == 200 && res.data != null) {
+      newRes.data = res.data;
+    }
+    return newRes;
+  }
+
+  Future<Response> setOrgInfo({String? name, String? description}) async {
+    Map<String, dynamic> req = {};
+
+    if (name != null) {
+      req.addAll({"name": name});
+    }
+
+    if (description != null) {
+      req.addAll({"description": description});
+    }
+
+    final dio = DioUtil.token(baseUrl: _baseUrl);
+
+    return dio.post("/organization", data: jsonEncode(req));
+  }
+
+  Future<Response<AdminSystemOrgInfo>> getOrgInfo(
+      {bool enableRetry = false}) async {
+    final dio = DioUtil(baseUrl: _baseUrl, enableRetry: enableRetry);
+    final res = await dio.get("/organization");
+
+    var newRes = Response<AdminSystemOrgInfo>(
+        headers: res.headers,
+        requestOptions: res.requestOptions,
+        isRedirect: res.isRedirect,
+        statusCode: res.statusCode,
+        statusMessage: res.statusMessage,
+        redirects: res.redirects,
+        extra: res.extra);
+
+    if (res.statusCode == 200 && res.data != null) {
+      final data = AdminSystemOrgInfo.fromJson(res.data!);
+      newRes.data = data;
+    }
+    return newRes;
+  }
+
+  Future<Response<AdminSystemCommonInfo>> getCommonInfo(
+      {bool enableRetry = false}) async {
+    final dio = DioUtil(baseUrl: _baseUrl, enableRetry: enableRetry);
+    final res = await dio.get("/common");
+
+    var newRes = Response<AdminSystemCommonInfo>(
+        headers: res.headers,
+        requestOptions: res.requestOptions,
+        isRedirect: res.isRedirect,
+        statusCode: res.statusCode,
+        statusMessage: res.statusMessage,
+        redirects: res.redirects,
+        extra: res.extra);
+
+    if (res.statusCode == 200 && res.data != null) {
+      final data = AdminSystemCommonInfo.fromJson(res.data!);
+      newRes.data = data;
+    }
+    return newRes;
+  }
+
+  Future<Response> uploadOrgLogo(Uint8List avatarBytes) async {
+    final dio = DioUtil.token(baseUrl: _baseUrl);
+    dio.options.headers["content-type"] = "image/png";
+    dio.options.validateStatus = (status) {
+      return [200, 413].contains(status);
+    };
+
+    return dio.post(
+      "/orgnization/logo",
+      // data: jsonEncode(avatarBytes)
+      data: Stream.fromIterable(avatarBytes.map((e) => [e])),
+      options: Options(
+        headers: {
+          Headers.contentLengthHeader: avatarBytes.length, // set content-length
+        },
+      ),
+    );
+  }
+
+  Future<Response<bool>> getInitialized({bool enableRetry = false}) async {
+    final dio = DioUtil(baseUrl: _baseUrl, enableRetry: enableRetry);
+    dio.options.connectTimeout = Duration(milliseconds: 5000);
+
+    final res = await dio.get("/initialized");
+
+    var newRes = Response<bool>(
+        headers: res.headers,
+        requestOptions: res.requestOptions,
+        isRedirect: res.isRedirect,
+        statusCode: res.statusCode,
+        statusMessage: res.statusMessage,
+        redirects: res.redirects,
+        extra: res.extra);
+
+    if (res.statusCode == 200 && res.data != null) {
+      if (res.data == true) {
+        newRes.data = res.data;
+      } else {
+        newRes.data = false;
+      }
+    }
+    return newRes;
+  }
+}
