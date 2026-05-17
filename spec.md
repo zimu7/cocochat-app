@@ -1,3 +1,13 @@
+## 2、联系人没有刷新的问题
+
+在ContactDetailPage中，removeContact()、addContact()、blockContact()、unblockContact()这些方法更新了
+  DB，但没有刷新_userInfoMNotifier，也没有调用fireUser()。因此，本地UI和其他组件（ContactList、CocoChatPage）没有收到通
+  知。
+
+  修复方法：每次联系人状态更改后，从DB获取更新后的UserInfoM，更新通知器，并触发用户事件。
+
+
+
 ## 1、sqlite3引用问题
 
 根本原因：db.dart 原来直接使用 databaseFactoryFfi 作为全局 databaseFactory。sqflite_common_ffi 通过 FFI 加载

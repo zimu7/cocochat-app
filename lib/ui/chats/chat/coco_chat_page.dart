@@ -20,6 +20,7 @@ import 'package:cocochat_app/dao/init_dao/user_info.dart';
 import 'package:cocochat_app/globals.dart' as globals;
 import 'package:cocochat_app/models/ui_models/chat_page_controller.dart';
 import 'package:cocochat_app/models/ui_models/msg_tile_data.dart';
+import 'package:cocochat_app/services/coco_chat_service.dart';
 import 'package:cocochat_app/services/file_handler.dart';
 import 'package:cocochat_app/services/file_handler/audio_file_handler.dart';
 import 'package:cocochat_app/services/coco_audio_service.dart';
@@ -387,6 +388,7 @@ class _CocoChatPageState extends State<CocoChatPage>
     final updatedUserInfoM = await UserInfoDao().getUserByUid(uid);
     if (updatedUserInfoM != null) {
       widget.userInfoNotifier!.value = updatedUserInfoM;
+      App.app.chatService.fireUser(updatedUserInfoM, EventActions.update, true);
     }
   }
 

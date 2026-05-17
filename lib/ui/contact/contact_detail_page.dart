@@ -410,6 +410,14 @@ class _ContactDetailPageState extends State<ContactDetailPage> {
     await addContact();
   }
 
+  Future<void> _refreshUserInfoNotifier(int uid) async {
+    final updatedUserInfoM = await UserInfoDao().getUserByUid(uid);
+    if (updatedUserInfoM != null) {
+      _userInfoMNotifier.value = updatedUserInfoM;
+      App.app.chatService.fireUser(updatedUserInfoM, EventActions.update, true);
+    }
+  }
+
   Future<void> blockContact() async {
     // Remove contact from contact list.
     // All messages will be kept.
@@ -423,6 +431,7 @@ class _ContactDetailPageState extends State<ContactDetailPage> {
         await ContactDao()
             .updateContact(_userInfoMNotifier.value.uid, ContactStatus.blocked)
             .then((upatedContactM) async {
+          await _refreshUserInfoNotifier(_userInfoMNotifier.value.uid);
           dismissBusyDialog();
         });
       } else {
@@ -453,6 +462,7 @@ class _ContactDetailPageState extends State<ContactDetailPage> {
         await ContactDao()
             .updateContact(_userInfoMNotifier.value.uid, ContactStatus.none)
             .then((upatedContactM) async {
+          await _refreshUserInfoNotifier(_userInfoMNotifier.value.uid);
           dismissBusyDialog();
         });
       } else {
@@ -485,6 +495,7 @@ class _ContactDetailPageState extends State<ContactDetailPage> {
         await ContactDao()
             .updateContact(_userInfoMNotifier.value.uid, ContactStatus.none)
             .then((upatedContactM) async {
+          await _refreshUserInfoNotifier(_userInfoMNotifier.value.uid);
           dismissBusyDialog();
         });
       } else {
@@ -515,6 +526,7 @@ class _ContactDetailPageState extends State<ContactDetailPage> {
         await ContactDao()
             .updateContact(_userInfoMNotifier.value.uid, ContactStatus.added)
             .then((upatedContactM) async {
+          await _refreshUserInfoNotifier(_userInfoMNotifier.value.uid);
           dismissBusyDialog();
         });
       } else {
