@@ -1,3 +1,9 @@
+## 3、修正文件下载的问题
+
+修复文件下载保存的问题，使用 file_saver 库。
+
+
+
 ## 2、联系人没有刷新的问题
 
 在ContactDetailPage中，removeContact()、addContact()、blockContact()、unblockContact()这些方法更新了

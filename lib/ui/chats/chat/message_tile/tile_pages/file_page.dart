@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cocochat_app/l10n/app_localizations.dart';
@@ -214,29 +216,86 @@ class _FilePageState extends State<FilePage> {
 
   Future<bool> _saveToDownloads() async {
     try {
-      await Permission.storage.request().isGranted.then((value) async {
-        if (value) {
-          // final externalFile = await _localFile!
-          //     .copy("$downloadsPath/${widget.fileName}.${widget.extension}");
+      if (_localFile == null) {
+        if (!mounted) return false;
+        await showAppAlert(
+            context: context,
+            title: AppLocalizations.of(context)!.filePageCantFindFile,
+            content: AppLocalizations.of(context)!.filePageCantFindFileContent,
+            actions: [
+              AppAlertDialogAction(
+                  text: AppLocalizations.of(context)!.ok,
+                  action: () => Navigator.of(context).pop())
+            ]);
+        return false;
+      }
 
-          return true;
+      // Android 9 及以下需要 storage 权限
+      if (Platform.isAndroid) {
+        final androidInfo = await DeviceInfoPlugin().androidInfo;
+        if (androidInfo.version.sdkInt < 29) {
+          final status = await Permission.storage.request();
+          if (!status.isGranted) {
+            if (!mounted) return false;
+            await showAppAlert(
+                context: context,
+                title: AppLocalizations.of(context)!.permissionRequired,
+                content: AppLocalizations.of(context)!.permissionRequiredDes,
+                actions: [
+                  AppAlertDialogAction(
+                      text: AppLocalizations.of(context)!.ok,
+                      action: () => Navigator.of(context).pop())
+                ]);
+            return false;
+          }
+          // Android 9 及以下使用传统方式
+          await _localFile!.copy(
+              "$downloadsPath/${widget.fileName}.${widget.extension}");
         } else {
-          if (!mounted) return false;
-          await showAppAlert(
-              context: context,
-              title: AppLocalizations.of(context)!.permissionRequired,
-              content: AppLocalizations.of(context)!.permissionRequiredDes,
-              actions: [
-                AppAlertDialogAction(
-                    text: AppLocalizations.of(context)!.ok,
-                    action: () => Navigator.of(context).pop())
-              ]);
+          // Android 10+ 使用 saveAs 弹出系统保存对话框
+          final path = await FileSaver.instance.saveAs(
+            name: widget.fileName,
+            bytes: await _localFile!.readAsBytes(),
+            ext: widget.extension,
+            mimeType: MimeType.other,
+          );
+          if (path == null) {
+            return false;
+          }
         }
-      });
+      } else {
+        // iOS 或其他平台
+        await _localFile!.copy(
+            "$downloadsPath/${widget.fileName}.${widget.extension}");
+      }
+
+      if (mounted) {
+        await showAppAlert(
+            context: context,
+            title: AppLocalizations.of(context)!.savedSuccessfully,
+            content: AppLocalizations.of(context)!.fileSavedToDownloads,
+            actions: [
+              AppAlertDialogAction(
+                  text: AppLocalizations.of(context)!.ok,
+                  action: () => Navigator.of(context).pop())
+            ]);
+      }
+      return true;
     } catch (e) {
       App.logger.severe(e);
+      if (mounted) {
+        await showAppAlert(
+            context: context,
+            title: AppLocalizations.of(context)!.saveFailed,
+            content: e.toString(),
+            actions: [
+              AppAlertDialogAction(
+                  text: AppLocalizations.of(context)!.ok,
+                  action: () => Navigator.of(context).pop())
+            ]);
+      }
+      return false;
     }
-    return false;
   }
 
   /// To replace internal filename (localMid) with real name, making shared file

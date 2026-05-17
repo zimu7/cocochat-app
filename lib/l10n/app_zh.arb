@@ -362,6 +362,7 @@
     "filePageDownloadFailedContent":"CocoChat 无法下载此文件。它可能已从服务器删除。",
     "filePageCantFindFile":"无法找到文件",
     "filePageCantFindFileContent":"CocoChat 无法在本机或服务器找到此文件。它可能已从服务器删除。",
+    "fileSavedToDownloads":"文件已保存到下载文件夹。",
 
     "chatTextFieldCameraMicrophonePermission":"CocoChat 需要相机和麦克风权限",
     "chatTextFieldCameraMicrophonePermissionContent":"授权相机和麦克风权限以发送图片及视频消息。",

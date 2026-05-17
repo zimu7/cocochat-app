@@ -362,6 +362,7 @@
     "filePageDownloadFailedContent":"CocoChat can't download this file. It might have been deleted from server.",
     "filePageCantFindFile":"Can't Open File",
     "filePageCantFindFileContent":"CocoChat can't find this file on your device or from the server. It might have been deleted.",
+    "fileSavedToDownloads":"File saved to Downloads folder.",
 
     "chatTextFieldCameraMicrophonePermission":"CocoChat needs camera and microphone permissions",
     "chatTextFieldCameraMicrophonePermissionContent":"Grant camera and microphone permissions for sending image and video messages.",
