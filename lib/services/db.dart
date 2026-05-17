@@ -2,13 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart' show sqfliteFfiInit, databaseFactoryFfi;
 import 'package:cocochat_app/app.dart';
 import 'package:simple_logger/simple_logger.dart';
 import 'package:sqflite/utils/utils.dart';
 
 const _orgDbName = 'org_chat.db';
-var databaseFactory = databaseFactoryFfi;
+
 late Database db;
 late Database orgDb;
 final _logger = SimpleLogger();
@@ -18,6 +19,12 @@ final _logger = SimpleLogger();
 /// This method is called only once when main executes. It creates db if
 /// it does not exist. No nothing if db has been created.
 Future<void> initDb({String? dbFileName}) async {
+  // On desktop platforms, initialize sqflite_ffi and override the factory
+  if (!Platform.isAndroid && !Platform.isIOS) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+
   try {
     String databasesPath = await getDatabasesPath();
     {
