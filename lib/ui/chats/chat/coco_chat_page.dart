@@ -330,6 +330,7 @@ class _CocoChatPageState extends State<CocoChatPage>
         await ContactDao()
             .updateContact(uid, ContactStatus.none)
             .then((updatedContactM) async {
+          await _refreshUserInfoNotifier(uid);
           dismissBusyDialog();
         });
       } else {
@@ -361,6 +362,7 @@ class _CocoChatPageState extends State<CocoChatPage>
         await ContactDao()
             .updateContact(uid, ContactStatus.blocked)
             .then((updatedContactM) async {
+          await _refreshUserInfoNotifier(uid);
           dismissBusyDialog();
         });
       } else {
@@ -380,6 +382,14 @@ class _CocoChatPageState extends State<CocoChatPage>
     });
   }
 
+  Future<void> _refreshUserInfoNotifier(int uid) async {
+    if (widget.userInfoNotifier == null) return;
+    final updatedUserInfoM = await UserInfoDao().getUserByUid(uid);
+    if (updatedUserInfoM != null) {
+      widget.userInfoNotifier!.value = updatedUserInfoM;
+    }
+  }
+
   Future<void> _addContact(int uid) async {
     showBusyDialog();
 
@@ -390,6 +400,7 @@ class _CocoChatPageState extends State<CocoChatPage>
         await ContactDao()
             .updateContact(uid, ContactStatus.added)
             .then((updatedContactM) async {
+          await _refreshUserInfoNotifier(uid);
           dismissBusyDialog();
         });
       } else {
