@@ -29,7 +29,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "net.winbomb.cocochat.app"
+    namespace "pub.zimu.cocochat.app"
     ndkVersion = "28.2.13676358"
     compileSdkVersion flutter.compileSdkVersion
 
@@ -47,7 +47,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "net.winbomb.cocochat.app"
+        applicationId "pub.zimu.cocochat.app"
         //minSdkVersion flutter.minSdkVersion
         multiDexEnabled true
         // manifestPlaceholders += [pdftronLicenseKey:PDFTRON_LICENSE_KEY]

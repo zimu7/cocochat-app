@@ -1,4 +1,4 @@
-package net.winbomb.cocochat.app
+package pub.zimu.cocochat.app
 import android.content.Context   
 import android.app.NotificationManager
 
