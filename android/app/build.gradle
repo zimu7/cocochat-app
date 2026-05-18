@@ -78,6 +78,13 @@ android {
        }
    }
 
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def versionName = variant.versionName
+            outputFileName = "cocochat-${versionName}.apk"
+        }
+    }
+
 
     lintOptions { 
       checkReleaseBuilds false 
