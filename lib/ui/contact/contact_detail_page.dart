@@ -53,6 +53,7 @@ class _ContactDetailPageState extends State<ContactDetailPage> {
     super.initState();
 
     _userInfoMNotifier.value = widget.userInfoM;
+    _refreshUserInfoNotifier(widget.userInfoM.uid);
 
     enableContact.value =
         App.app.chatServerM.properties.commonInfo?.contactVerificationEnable ==
@@ -557,7 +558,7 @@ class _ContactDetailPageState extends State<ContactDetailPage> {
       return;
     }
 
-    _userInfoMNotifier.value = userInfoM;
+    await _refreshUserInfoNotifier(userInfoM.uid);
 
     if (mounted) {
       setState(() {});

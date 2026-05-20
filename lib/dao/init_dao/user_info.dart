@@ -167,12 +167,14 @@ class UserInfoDao extends Dao<UserInfoM> {
     UserInfoM? old =
         await first(where: '${UserInfoM.F_uid} = ?', whereArgs: [m.uid]);
     if (old != null) {
-      if (old == m) return old;
+      if (old == m) {
+        m = old;
+      } else {
+        m.id = old.id;
+        m.createdAt = old.createdAt;
 
-      m.id = old.id;
-      m.createdAt = old.createdAt;
-
-      await super.update(m);
+        await super.update(m);
+      }
 
       App.logger.info("UserInfoM updated. ${m.uid}");
     } else {
