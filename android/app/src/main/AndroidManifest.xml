@@ -34,7 +34,8 @@
         android:label="CocoChat"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
-        android:networkSecurityConfig="@xml/network_security_config">
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:enableOnBackInvokedCallback="true">
         android:usesCleartextTraffic="true"
         <activity
             android:name=".MainActivity"

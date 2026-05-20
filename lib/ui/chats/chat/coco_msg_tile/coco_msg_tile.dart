@@ -328,7 +328,7 @@ class _VoceMsgTileState extends State<VoceMsgTile> {
         });
   }
 
-  Widget _buildReactions(context) {
+  Widget _buildReactions(BuildContext context) {
     return ValueListenableBuilder<ChatMsgM>(
         valueListenable: widget.tileData.chatMsgMNotifier,
         builder: (context, chatMsgM, _) {

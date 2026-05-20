@@ -19,25 +19,16 @@ enum PersistentConnectionType { sse, websocket }
 /// use *extends* keyword in subclasses as some methods have already been
 /// implemented.
 abstract class PersistentConnection {
-  PersistentConnectionType _type = PersistentConnectionType.sse;
-  PersistentConnectionType get type => _type;
-  set type(PersistentConnectionType value) => _type = value;
+  PersistentConnectionType type = PersistentConnectionType.sse;
 
   /// This variable is used to prevent multiple connection attempts.
-  bool _isConnecting = false;
-
   @protected
-  bool get isConnecting => _isConnecting;
-
-  @protected
-  set isConnecting(bool value) => _isConnecting = value;
+  bool isConnecting = false;
 
   /// This variable is used for checking if the connection is established.
   ///
   /// If connection fails, this flag will be set to false.
-  bool _isConnected = false;
-  bool get isConnected => _isConnected;
-  set isConnected(bool value) => _isConnected = value;
+  bool isConnected = false;
 
   /// Reconnection time interval in secend.
   ///
@@ -113,8 +104,8 @@ abstract class PersistentConnection {
   /// 3. Fire [afterReady] event with false value.
   /// 4. Cancel reconnection timer.
   Future<void> generalClose() async {
-    _isConnected = false;
-    _isConnecting = false;
+    isConnected = false;
+    isConnecting = false;
     App.app.statusService?.fireSseLoading(PersConnStatus.disconnected);
     fireAfterReady(false);
     App.logger.info("Persistent Connection (${type.name}) closed.");

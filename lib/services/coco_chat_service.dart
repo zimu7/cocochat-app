@@ -1907,7 +1907,7 @@ class CocoChatService {
     return true;
   }
 
-  Future getOpenGraphicParse(url) async {
+  Future<dynamic> getOpenGraphicParse(String url) async {
     final resourceApi = ResourceApi();
     return (await resourceApi.getOpenGraphicParse(url)).data;
   }
