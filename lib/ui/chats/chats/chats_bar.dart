@@ -406,10 +406,10 @@ class _ChatsBarState extends State<ChatsBar> {
             AddActions.channel),
       _buildItem(Icon(AppIcons.dm, color: AppColors.grey97),
           AppLocalizations.of(context)!.chatsBarNewDm, AddActions.dm),
-      _buildItem(Icon(AppIcons.member_add, color: AppColors.grey97),
-          AppLocalizations.of(context)!.inviteNewUsers, AddActions.user),
-      _buildItem(Icon(Icons.qr_code_scanner, color: AppColors.grey97),
-          AppLocalizations.of(context)!.scanQrCode, AddActions.scan)
+      // _buildItem(Icon(AppIcons.member_add, color: AppColors.grey97),
+      //     AppLocalizations.of(context)!.inviteNewUsers, AddActions.user),
+      // _buildItem(Icon(Icons.qr_code_scanner, color: AppColors.grey97),
+      //     AppLocalizations.of(context)!.scanQrCode, AddActions.scan)
     ];
   }
 

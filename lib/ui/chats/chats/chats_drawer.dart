@@ -124,23 +124,23 @@ class _ChatsDrawerState extends State<ChatsDrawer> {
                       },
                     ),
                     SizedBox(height: 16),
-                    VoceButton(
-                      width: double.maxFinite,
-                      contentColor: Colors.white,
-                      decoration: BoxDecoration(
-                          color: AppColors.primaryBlue,
-                          borderRadius: BorderRadius.circular(8)),
-                      normal: Text(
-                        AppLocalizations.of(context)!.inputInvitationLink,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      action: () async {
-                        _onTapPasteInvitationLink();
-                        return true;
-                      },
-                    )
+                    // VoceButton(
+                    //   width: double.maxFinite,
+                    //   contentColor: Colors.white,
+                    //   decoration: BoxDecoration(
+                    //       color: AppColors.primaryBlue,
+                    //       borderRadius: BorderRadius.circular(8)),
+                    //   normal: Text(
+                    //     AppLocalizations.of(context)!.inputInvitationLink,
+                    //     maxLines: 1,
+                    //     overflow: TextOverflow.ellipsis,
+                    //     style: TextStyle(color: Colors.white),
+                    //   ),
+                    //   action: () async {
+                    //     _onTapPasteInvitationLink();
+                    //     return true;
+                    //   },
+                    // )
                   ],
                 ),
               )
@@ -170,6 +170,7 @@ class _ChatsDrawerState extends State<ChatsDrawer> {
     Navigator.of(context).push(route);
   }
 
+  // ignore: unused_element
   void _onTapPasteInvitationLink() async {
     final route = PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>

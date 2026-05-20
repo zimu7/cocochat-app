@@ -376,15 +376,15 @@ class _LoginPageState extends State<LoginPage> {
                 return true;
               },
             ),
-            Text("  |  "),
-            VoceButton(
-              normal: Text(AppLocalizations.of(context)!.inputInvitationLink,
-                  maxLines: 1, overflow: TextOverflow.ellipsis),
-              action: () async {
-                _onPasteInvitationLinkTapped(context);
-                return true;
-              },
-            ),
+            // Text("  |  "),
+            // VoceButton(
+            //   normal: Text(AppLocalizations.of(context)!.inputInvitationLink,
+            //       maxLines: 1, overflow: TextOverflow.ellipsis),
+            //   action: () async {
+            //     _onPasteInvitationLinkTapped(context);
+            //     return true;
+            //   },
+            // ),
           ],
         ),
         SizedBox(
@@ -422,6 +422,7 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
+  // ignore: unused_element
   void _onPasteInvitationLinkTapped(BuildContext context) async {
     final route = PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>

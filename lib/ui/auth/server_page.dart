@@ -121,16 +121,16 @@ class _ServerPageState extends State<ServerPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                VoceButton(
-                  normal: Text(
-                      AppLocalizations.of(context)!.inputInvitationLink,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
-                  action: () async {
-                    _onPasteInvitationLinkTapped(context);
-                    return true;
-                  },
-                ),
+                // VoceButton(
+                //   normal: Text(
+                //       AppLocalizations.of(context)!.inputInvitationLink,
+                //       maxLines: 1,
+                //       overflow: TextOverflow.ellipsis),
+                //   action: () async {
+                //     _onPasteInvitationLinkTapped(context);
+                //     return true;
+                //   },
+                // ),
               ],
             ),
             SizedBox(
@@ -534,6 +534,7 @@ class _ServerPageState extends State<ServerPage> {
     return true;
   }
 
+  // ignore: unused_element
   void _onPasteInvitationLinkTapped(BuildContext context) async {
     final route = PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
