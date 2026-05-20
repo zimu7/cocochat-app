@@ -46,11 +46,6 @@ class SettingsAboutPage extends StatelessWidget {
             child: Icon(Icons.arrow_back_ios_new, color: AppColors.grey97)),
       ),
       body: SafeArea(child: _buildBody(context)),
-      bottomNavigationBar: SafeArea(
-          child: Text(
-        AppLocalizations.of(context)!.aboutPageCopyRight,
-        textAlign: TextAlign.center,
-      )),
     );
   }
 
@@ -182,6 +177,15 @@ class SettingsAboutPage extends StatelessWidget {
     try {
       const logUrl = "https://cocochat.s3.amazonaws.com/changelog.json";
       final res = await http.get(Uri.parse(logUrl));
+      if (res.statusCode != 200) {
+        App.logger.severe("Failed to fetch changelog: ${res.statusCode}");
+        return null;
+      }
+      final contentType = res.headers['content-type'];
+      if (contentType != null && contentType.contains('xml')) {
+        App.logger.severe("Received XML instead of JSON from changelog URL");
+        return null;
+      }
       return ChangeLog.fromJson(jsonDecode(res.body));
     } catch (e) {
       App.logger.severe(e);
