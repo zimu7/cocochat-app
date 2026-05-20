@@ -57,6 +57,7 @@ class SuspensionView extends StatefulWidget {
   /// The amount of space by which to inset the children.
   final EdgeInsets? padding;
 
+  // ignore: library_private_types_in_public_api
   @override
   _SuspensionViewState createState() => _SuspensionViewState();
 }

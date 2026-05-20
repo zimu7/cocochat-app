@@ -23,7 +23,9 @@ class _QueuedFuture {
 }
 
 class TaskQueue {
+  // ignore: library_private_types_in_public_api
   List<_QueuedFuture> nextCycle = [];
+  // ignore: library_private_types_in_public_api
   List<_QueuedFuture> currentCycle = [];
   Duration? delay;
   bool isProcessing = false;

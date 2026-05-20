@@ -259,6 +259,7 @@ class IndexBar extends StatefulWidget {
   /// IndexBarController. If non-null, this can be used to control the state of the IndexBar.
   final IndexBarController? controller;
 
+  // ignore: library_private_types_in_public_api
   @override
   _IndexBarState createState() => _IndexBarState();
 }
@@ -500,6 +501,7 @@ class BaseIndexBar extends StatefulWidget {
 
   final IndexBarDragNotifier? indexBarDragNotifier;
 
+  // ignore: library_private_types_in_public_api
   @override
   _BaseIndexBarState createState() => _BaseIndexBarState();
 }
