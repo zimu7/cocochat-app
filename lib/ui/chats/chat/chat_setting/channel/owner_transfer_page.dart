@@ -62,16 +62,17 @@ class _OwnerTransferPageState extends State<OwnerTransferPage> {
                   }
                   return CupertinoButton(
                       onPressed: () async {
+                        final navigator = Navigator.of(context);
                         _busyNotifier.value = true;
                         if (await _transferOwner()) {
                           _busyNotifier.value = false;
                           if (mounted) {
-                            Navigator.of(context).pop();
+                            navigator.pop();
                           }
                           return;
                         }
                         if (mounted) {
-                          Navigator.of(context).pop();
+                          navigator.pop();
                           _busyNotifier.value = false;
                         }
                       },

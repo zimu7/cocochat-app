@@ -93,8 +93,8 @@ class AzListView extends StatefulWidget {
   /// IndexBar options.
   final IndexBarOptions indexBarOptions;
 
-  // ignore: library_private_types_in_public_api
   @override
+  // ignore: library_private_types_in_public_api
   _AzListViewState createState() => _AzListViewState();
 }
 

@@ -70,17 +70,18 @@ class _NewChannelPageState extends State<NewChannelPage> {
             isPrivate
                 ? CupertinoButton(
                     onPressed: () async {
+                      final navigator = Navigator.of(context);
                       final userList = await UserInfoDao().getUserList();
 
                       if (!mounted) return;
-                      final groupInfoM = await Navigator.of(context)
+                      final groupInfoM = await navigator
                           .push<GroupInfoM?>(
                               MaterialPageRoute(builder: ((context) {
                         return NewPrivateChannelSelectPage(userList!,
                             selectedNotifier, _nameController, _desController);
                       })));
                       if (groupInfoM != null && mounted) {
-                        Navigator.of(context).pop(groupInfoM);
+                        navigator.pop(groupInfoM);
                       }
                     },
                     child: Text(AppLocalizations.of(context)!.next,

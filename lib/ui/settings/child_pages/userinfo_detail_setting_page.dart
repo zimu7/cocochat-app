@@ -196,6 +196,7 @@ class _UserInfoDetailSettingPageState extends State<UserInfoDetailSettingPage> {
   }
 
   Future<void> _updateName(String name, BuildContext context) async {
+    final navigator = Navigator.of(context);
     final userApi = UserApi();
     final res = await userApi.updateUserInfo(name: name);
 
@@ -203,7 +204,7 @@ class _UserInfoDetailSettingPageState extends State<UserInfoDetailSettingPage> {
       // update
       App.logger.info("Username updated. name: $name");
       if (mounted) {
-        Navigator.pop(context);
+        navigator.pop();
       }
       return;
     } else if (res.statusCode == 409 && res.data != null) {

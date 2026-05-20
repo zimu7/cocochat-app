@@ -267,6 +267,8 @@ class _SettingPageState extends State<SettingPage> {
             isDangerAction: true,
             text: AppLocalizations.of(context)!.delete,
             action: () async {
+              final navigator = Navigator.of(context);
+              final localizations = AppLocalizations.of(context)!;
               final api = UserApi();
               final res = await api.delete();
               if (res.statusCode == 200) {
@@ -278,18 +280,16 @@ class _SettingPageState extends State<SettingPage> {
                     App.logger.severe(e);
                   }
                 });
-              } else if (mounted) {
-                Navigator.of(context).pop(context);
+              } else if (mounted && context.mounted) {
+                navigator.pop();
                 showAppAlert(
                     context: context,
-                    title:
-                        AppLocalizations.of(context)!.deleteAccountFailWarning,
-                    content: AppLocalizations.of(context)!
-                        .deleteAccountFailWarningContent,
+                    title: localizations.deleteAccountFailWarning,
+                    content: localizations.deleteAccountFailWarningContent,
                     actions: [
                       AppAlertDialogAction(
-                          text: AppLocalizations.of(context)!.ok,
-                          action: () => Navigator.of(context).pop(context))
+                          text: localizations.ok,
+                          action: () => navigator.pop())
                     ]);
               }
             }),

@@ -63,17 +63,17 @@ class _OwnerTransferSheetState extends State<OwnerTransferSheet> {
                   }
                   return CupertinoButton(
                       onPressed: () async {
+                        final navigator = Navigator.of(context);
                         _busyNotifier.value = true;
                         if (await _transferOwner() && await _leave()) {
                           _busyNotifier.value = false;
                           if (mounted) {
-                            Navigator.of(context)
-                                .popUntil((route) => route.isFirst);
+                            navigator.popUntil((route) => route.isFirst);
                           }
                           return;
                         }
                         if (mounted) {
-                          Navigator.of(context).pop();
+                          navigator.pop();
                           _busyNotifier.value = false;
                         }
                       },
