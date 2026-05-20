@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cocochat_app/l10n/app_localizations.dart';
-import 'package:cocochat_app/api/lib/admin_system_api.dart';
 import 'package:cocochat_app/api/lib/group_api.dart';
 import 'package:cocochat_app/api/models/group/group_create_request.dart';
 import 'package:cocochat_app/api/models/group/group_create_response.dart';
@@ -137,111 +136,26 @@ class _NewPrivateChannelSelectPageState
           isPublic: false,
           members: members);
 
-      final serverVersionRes = await AdminSystemApi().getServerVersion();
-      if (serverVersionRes.statusCode == 200) {
-        final serverVersion = serverVersionRes.data!;
-
-        if (isVersionNumberGreaterThan("0.3.3", serverVersion)) {
-          await _createGroupBfe033(req);
-        } else {
-          await _createGroupAft033(req);
-        }
-      } else {
-        return;
-      }
+      await _createGroup(req);
     } catch (e) {
       App.logger.severe(e);
     }
     return;
   }
 
-  bool isVersionNumberGreaterThan(String version1, String version2) {
-    final version1List = version1.split(".");
-    final version2List = version2.split(".");
-
-    for (int i = 0; i < version1List.length; i++) {
-      if (int.parse(version1List[i]) > int.parse(version2List[i])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  Future<int?> createGroupBfe033(GroupCreateRequest req) async {
+  Future<GroupCreateResponse?> _createGroupApi(GroupCreateRequest req) async {
     final groupApi = GroupApi();
-    final res = await groupApi.createBfe033(req);
+    final res = await groupApi.create(req);
     if (res.statusCode == 200 && res.data != null) {
       return res.data!;
     }
     return null;
   }
 
-  Future<GroupCreateResponse?> createGroupAft033(GroupCreateRequest req) async {
-    final groupApi = GroupApi();
-    final res = await groupApi.createAft033(req);
-    if (res.statusCode == 200 && res.data != null) {
-      return res.data!;
-    }
-    return null;
-  }
-
-  Future<void> _createGroupBfe033(GroupCreateRequest req) async {
-    final gid = await createGroupBfe033(req);
-    if (gid == null || gid == -1) {
-      App.logger.severe("Group Creation (before 0.3.4) Failed");
-    } else {
-      GroupInfo groupInfo = GroupInfo(
-        gid,
-        App.app.userDb!.uid,
-        req.name,
-        req.description,
-        req.members,
-        false,
-        0,
-        [],
-        true,
-        true,
-        false,
-        true,
-        null,
-      );
-      GroupInfoM groupInfoM = GroupInfoM.item(
-        gid,
-        "",
-        jsonEncode(groupInfo),
-        // Uint8List(0),
-        "",
-        0,
-        1,
-        DateTime.now().millisecondsSinceEpoch,
-        1,
-        1,
-        0,
-        1,
-        "",
-      );
-
-      try {
-        await GroupInfoDao()
-            .addOrNotUpdate(groupInfoM)
-            .then((value) {
-          if (mounted) {
-            Navigator.pop(context, value);
-          }
-        });
-      } catch (e) {
-        App.logger.severe(e);
-        if (mounted) {
-          Navigator.pop(context, groupInfoM);
-        }
-      }
-    }
-  }
-
-  Future<void> _createGroupAft033(GroupCreateRequest req) async {
-    final groupCreateResponse = await createGroupAft033(req);
+  Future<void> _createGroup(GroupCreateRequest req) async {
+    final groupCreateResponse = await _createGroupApi(req);
     if (groupCreateResponse == null || groupCreateResponse.gid == -1) {
-      App.logger.severe("Group Creation (after 0.3.4) Failed");
+      App.logger.severe("Group Creation Failed");
     } else {
       GroupInfo groupInfo = GroupInfo(
         groupCreateResponse.gid,
@@ -262,7 +176,6 @@ class _NewPrivateChannelSelectPageState
         groupCreateResponse.gid,
         "",
         jsonEncode(groupInfo),
-        // Uint8List(0),
         "",
         0,
         1,

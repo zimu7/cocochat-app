@@ -17,30 +17,7 @@ class GroupApi {
     _baseUrl = "$url/api/group";
   }
 
-  Future<Response<int>> createBfe033(GroupCreateRequest req) async {
-    final dio = DioUtil.token(baseUrl: _baseUrl);
-    dio.options.headers["content-type"] = "application/json";
-
-    final res = await dio.post("", data: req);
-
-    var newRes = Response<int>(
-        headers: res.headers,
-        requestOptions: res.requestOptions,
-        isRedirect: res.isRedirect,
-        statusCode: res.statusCode,
-        statusMessage: res.statusMessage,
-        redirects: res.redirects,
-        extra: res.extra);
-
-    if (res.statusCode == 200 && res.data != null) {
-      final data = res.data as int;
-      newRes.data = data;
-    }
-    return newRes;
-  }
-
-  Future<Response<GroupCreateResponse>> createAft033(
-      GroupCreateRequest req) async {
+  Future<Response<GroupCreateResponse>> create(GroupCreateRequest req) async {
     final dio = DioUtil.token(baseUrl: _baseUrl);
     dio.options.headers["content-type"] = "application/json";
 

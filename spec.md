@@ -1,3 +1,33 @@
+## 6、修复创建频道（channel）报错的问题
+
+报错信息：
+
+I/flutter (13875): 👻 INFO 2026-05-20 15:18:23.009623 [package:cocochat_app/services/persistent_connection/sse.dart 55:20 in VoceSse.connect.<fn>] {"group":{"avatar_updated_at":1779290308012,"description":"test","gid":18,"is_public":false,"members":[1,2,4],"name":"test","owner":1,"pinned_messages":[]},"type":"joined_group"}
+I/flutter (13875): ‼️ SEVERE 2026-05-20 15:18:23.115207 [package:cocochat_app/ui/chats/chats/new/new_private_channel_select_page.dart 153:18 in _NewPrivateChannelSelectPageState.createChannel] type '_Map<String, dynamic>' is not a subtype of type 'int' in type cast
+
+
+
+问题原因：
+
+ - group_api.dart：createBfe033 返回类型从 Response<int> 改为 Response<GroupCreateResponse>，用 fromJson
+     解析响应而非强转 int
+  - new_private_channel_select_page.dart：createGroupBfe033 返回 GroupCreateResponse?，_createGroupBfe033 使用
+      groupCreateResponse.gid
+  - new_channel_page.dart：同上
+
+  根因是服务端 API 返回的是 JSON 对象 {"gid": ..., "created_at": ...}，但旧版代码还在尝试把整个 Map 强转为 int。
+
+
+
+修改：
+
+- group_api.dart：删除 createBfe033 和 createAft033，合并为一个 create 方法
+- new_private_channel_select_page.dart：删除版本判断逻辑、isVersionNumberGreaterThan、两套创建方法，统一为
+  _createGroup；移除 admin_system_api import
+- new_channel_page.dart：同上，删除版本判断和两套方法，统一为 _createGroup；移除 admin_system_api import
+
+
+
 ## 5、修复联系人按钮添加的问题
 
 @lib/ui/contact/contact_detail_page.dart  从这个contact_detail_page.dart进入聊天详情页面，不管是否添加了联系人，都会
