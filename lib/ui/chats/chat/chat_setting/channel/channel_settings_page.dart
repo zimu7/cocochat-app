@@ -96,7 +96,7 @@ class _ChannelSettingsPageState extends State<ChannelSettingsPage> {
               children: [
                 _buildChannelInfo(context),
                 _buildMsgActions(),
-                _buildInvitition(context),
+                // _buildInvitition(context),
                 _buildSwitches(),
                 // _buildPin(),
                 _buildBurnAfterReading(context),
