@@ -302,7 +302,8 @@ class GroupApi {
 
   Future<Response> updateGroup(int gid, GroupUpdateRequest req) async {
     final dio = DioUtil.token(baseUrl: _baseUrl);
-    return dio.put("/$gid", data: req);
+    dio.options.headers["content-type"] = "application/json";
+    return dio.put("/$gid", data: json.encode(req.toJson()));
   }
 
   Future<Response> leaveGroup(int gid) async {

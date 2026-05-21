@@ -1,3 +1,13 @@
+## 7、修复频道修改页面报错的问题
+
+ 修复完成。updateGroup 方法缺少两样东西：
+  1. content-type: application/json header — Dio 无法从自定义对象推断 content-type，导致 415
+  2. json.encode(req.toJson()) — 需要手动序列化为 JSON 字符串
+
+  这与同文件中 create、addMembers 等方法的做法一致。
+
+
+
 ## 6、修复创建频道（channel）报错的问题
 
 报错信息：
