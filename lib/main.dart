@@ -168,7 +168,10 @@ class _CocoChatAppState extends State<CocoChatApp> with WidgetsBindingObserver {
       });
     } else {
       setState(() {
-        _locale = View.of(context).platformDispatcher.locale;
+        final systemLocale = View.of(context).platformDispatcher.locale;
+        _locale = systemLocale.languageCode == 'zh'
+            ? systemLocale
+            : const Locale('zh', '');
       });
     }
   }
@@ -227,8 +230,8 @@ class _CocoChatAppState extends State<CocoChatApp> with WidgetsBindingObserver {
         ],
         locale: _locale,
         supportedLocales: const [
-          Locale('en', ''), // English, no country code
           Locale('zh', ''),
+          Locale('en', ''),
         ],
         home: _defaultHome,
       ),
