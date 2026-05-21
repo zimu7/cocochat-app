@@ -238,7 +238,7 @@ class _ChannelInvitePageState extends State<ChannelInvitePage> {
     // Special case for dev.coco.chat server.
     String host = localLinkUri.host;
     if (host == "dev.coco.chat") {
-      host = "privoce.coco.chat";
+      host = "chat-test.zimu.pub";
     }
 
     final port = localLinkUri.hasPort ? ":${localLinkUri.port}" : "";

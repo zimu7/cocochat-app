@@ -185,6 +185,8 @@ class _ChannelSettingsPageState extends State<ChannelSettingsPage> {
     );
   }
 
+
+  // ignore: unused_element
   Widget _buildInvitition(BuildContext context) {
     bool isAdmin = App.app.userDb?.userInfo.isAdmin ?? false;
     bool isOwner =

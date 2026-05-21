@@ -66,7 +66,7 @@ class UserApi {
       'referer': App.app.chatServerM.fullUrl
     };
     if (App.app.chatServerM.url == "dev.coco.chat") {
-      refererHeader = {'referer': "https://privoce.coco.chat"};
+      refererHeader = {'referer': "https://chat-test.zimu.pub"};
     }
     dio.options.headers.addAll(refererHeader);
 
@@ -99,7 +99,7 @@ class UserApi {
       'referer': App.app.chatServerM.fullUrl
     };
     if (App.app.chatServerM.url == "dev.coco.chat") {
-      refererHeader = {'referer': "https://privoce.coco.chat"};
+      refererHeader = {'referer': "https://chat-test.zimu.pub"};
     }
     dio.options.headers.addAll(refererHeader);
 
@@ -129,7 +129,7 @@ class UserApi {
       'referer': App.app.chatServerM.fullUrl
     };
     if (App.app.chatServerM.url == "dev.coco.chat") {
-      refererHeader = {'referer': "https://privoce.coco.chat"};
+      refererHeader = {'referer': "https://chat-test.zimu.pub"};
     }
     dio.options.headers.addAll(refererHeader);
 
@@ -173,7 +173,7 @@ class UserApi {
       'referer': App.app.chatServerM.fullUrl
     };
     if (App.app.chatServerM.url == "dev.coco.chat") {
-      refererHeader = {'referer': "https://privoce.coco.chat"};
+      refererHeader = {'referer': "https://chat-test.zimu.pub"};
     }
     dio.options.headers.addAll(refererHeader);
 
@@ -214,7 +214,7 @@ class UserApi {
       'referer': App.app.chatServerM.fullUrl
     };
     if (App.app.chatServerM.url == "dev.coco.chat") {
-      refererHeader = {'referer': "https://privoce.coco.chat"};
+      refererHeader = {'referer': "https://chat-test.zimu.pub"};
     }
     dio.options.headers.addAll(refererHeader);
 

@@ -21,7 +21,7 @@ class ChatServerHelper {
     ChatServerM chatServerM = ChatServerM();
     ServerStatusWithChatServerM s;
 
-    if (url == "https://privoce.coco.chat") {
+    if (url == "https://chat-test.zimu.pub") {
       url = "https://dev.coco.chat";
     }
 

@@ -230,7 +230,7 @@ class InvitationLinkPastePage extends StatelessWidget {
       Uri uri = Uri.parse(modifiedLink).replace(fragment: '');
 
       String host = uri.host;
-      if (host == "privoce.coco.chat") {
+      if (host == "chat-test.zimu.pub") {
         host = "dev.coco.chat";
       }
 

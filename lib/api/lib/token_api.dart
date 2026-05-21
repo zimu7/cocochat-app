@@ -23,7 +23,7 @@ class TokenApi {
     // Special handling for Privoce dev.
     dio.options.headers = {'referer': App.app.chatServerM.fullUrl};
     if (App.app.chatServerM.url == "dev.coco.chat") {
-      dio.options.headers = {'referer': "https://privoce.coco.chat"};
+      dio.options.headers = {'referer': "https://chat-test.zimu.pub"};
     }
 
     dio.options.validateStatus = (status) {
