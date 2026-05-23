@@ -24,6 +24,30 @@ extension TimeHelper on DateTime {
     }
   }
 
+  String toChatListTimeStr(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    if (locale.languageCode != "zh") {
+      return toTime24StringEn(context);
+    }
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
+    final localtime = toLocal();
+    final dateToCheck =
+        DateTime(localtime.year, localtime.month, localtime.day);
+
+    if (dateToCheck == today) {
+      return "今天 ${localtime.toTime24Str()}";
+    } else if (dateToCheck == yesterday) {
+      return "昨天 ${localtime.toTime24Str()}";
+    } else if (localtime.year == now.year) {
+      return "${localtime.month}月${localtime.day}日";
+    } else {
+      return "${localtime.year}年${localtime.month}月${localtime.day}日";
+    }
+  }
+
   String toChatTime24StrEn(BuildContext context) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);

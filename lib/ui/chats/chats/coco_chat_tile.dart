@@ -80,7 +80,7 @@ class CocoChatTile extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 16),
                       child: Text(
                           DateTime.fromMillisecondsSinceEpoch(updatedAt)
-                              .toTime24StringEn(context),
+                              .toChatListTimeStr(context),
                           strutStyle: const StrutStyle(forceStrutHeight: true),
                           style: AppTextStyles.labelSmall),
                     );
