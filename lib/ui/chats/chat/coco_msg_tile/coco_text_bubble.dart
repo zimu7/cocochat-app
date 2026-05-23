@@ -166,34 +166,28 @@ class VoceMessageBubbleFrame extends StatelessWidget {
     final bubbleColor =
         isSelfMessage ? AppColors.chatSelfBubbleBg : AppColors.chatOtherBubbleBg;
 
-    return Padding(
-      padding: EdgeInsets.only(
-        left: isSelfMessage ? 0 : 8,
-        right: isSelfMessage ? 8 : 0,
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: bubbleColor,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: child,
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: bubbleColor,
+            borderRadius: BorderRadius.circular(4),
           ),
-          Positioned(
-            left: isSelfMessage ? null : -8,
-            right: isSelfMessage ? -8 : null,
-            top: 12,
-            child: CustomPaint(
-              size: const Size(8, 10),
-              painter: _MessageBubbleTailPainter(
-                  color: bubbleColor, isSelfMessage: isSelfMessage),
-            ),
+          child: child,
+        ),
+        Positioned(
+          left: isSelfMessage ? null : -10,
+          right: isSelfMessage ? -10 : null,
+          top: 12,
+          child: CustomPaint(
+            size: const Size(10, 10),
+            painter: _MessageBubbleTailPainter(
+                color: bubbleColor, isSelfMessage: isSelfMessage),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
