@@ -322,7 +322,9 @@ class _VoceMsgTileState extends State<VoceMsgTile> {
             children: [
               if (widget.tileData.chatMsgMNotifier.value.isReplyMsg)
                 _buildReplyBubble(),
-              _buildMainContent(),
+              _buildMainContent(
+                  isSelfRightAligned:
+                      mode == ChatLayoutMode.SelfRight && isSelf),
             ],
           );
         });
@@ -398,12 +400,14 @@ class _VoceMsgTileState extends State<VoceMsgTile> {
     return VoceReplyBubble.tileData(tileData: widget.tileData);
   }
 
-  ValueListenableBuilder<ChatMsgM> _buildMainContent() {
+  ValueListenableBuilder<ChatMsgM> _buildMainContent(
+      {required bool isSelfRightAligned}) {
     return ValueListenableBuilder<ChatMsgM>(
         valueListenable: widget.tileData.chatMsgMNotifier,
         builder: (context, chatMsgM, _) {
           if (chatMsgM.isTextMsg) {
-            return VoceTextBubble(chatMsgM: chatMsgM);
+            return VoceTextBubble(
+                chatMsgM: chatMsgM, isSelfMessage: isSelfRightAligned);
           } else if (chatMsgM.isMarkdownMsg) {
             return VoceMdBubble(chatMsgM: chatMsgM);
           } else if (chatMsgM.isFileMsg) {

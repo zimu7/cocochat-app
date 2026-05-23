@@ -10,6 +10,7 @@ import 'package:cocochat_app/ui/app_colors.dart';
 
 class VoceTextBubble extends StatelessWidget {
   final ChatMsgM chatMsgM;
+  final bool isSelfMessage;
 
   late final String _content;
 
@@ -20,7 +21,11 @@ class VoceTextBubble extends StatelessWidget {
 
   final int? maxLines;
 
-  VoceTextBubble({super.key, required this.chatMsgM, this.maxLines}) {
+  VoceTextBubble(
+      {super.key,
+      required this.chatMsgM,
+      this.isSelfMessage = false,
+      this.maxLines}) {
     _edited = chatMsgM.reactionData?.hasEditedText ?? false;
     _hasMention = chatMsgM.hasMention;
 
@@ -128,9 +133,62 @@ class VoceTextBubble extends StatelessWidget {
                 fontWeight: FontWeight.w400))
     ]);
 
-    return RichText(
+    final child = RichText(
       maxLines: maxLines,
       text: textSpan,
     );
+
+    if (!isSelfMessage) {
+      return child;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: const Color(0xFF94ED6F),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: child,
+          ),
+          const Positioned(
+            right: -8,
+            top: 12,
+            child: CustomPaint(
+              size: Size(8, 10),
+              painter: _SelfMessageBubbleTailPainter(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
+}
+
+class _SelfMessageBubbleTailPainter extends CustomPainter {
+  const _SelfMessageBubbleTailPainter();
+
+  static const Color _color = Color(0xFF94ED6F);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = _color
+      ..style = PaintingStyle.fill;
+
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width, size.height / 2)
+      ..lineTo(0, size.height)
+      ..close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
