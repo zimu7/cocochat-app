@@ -407,9 +407,14 @@ class _VoceMsgTileState extends State<VoceMsgTile> {
         builder: (context, chatMsgM, _) {
           if (chatMsgM.isTextMsg) {
             return VoceTextBubble(
-                chatMsgM: chatMsgM, isSelfMessage: isSelfRightAligned);
+                chatMsgM: chatMsgM,
+                enableBubble: true,
+                isSelfMessage: isSelfRightAligned);
           } else if (chatMsgM.isMarkdownMsg) {
-            return VoceMdBubble(chatMsgM: chatMsgM);
+            return VoceMessageBubbleFrame(
+              isSelfMessage: isSelfRightAligned,
+              child: VoceMdBubble(chatMsgM: chatMsgM),
+            );
           } else if (chatMsgM.isFileMsg) {
             if (chatMsgM.isImageMsg) {
               return VoceTileImageBubble.tileData(

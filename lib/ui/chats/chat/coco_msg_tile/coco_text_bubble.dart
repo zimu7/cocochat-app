@@ -10,6 +10,7 @@ import 'package:cocochat_app/ui/app_colors.dart';
 
 class VoceTextBubble extends StatelessWidget {
   final ChatMsgM chatMsgM;
+  final bool enableBubble;
   final bool isSelfMessage;
 
   late final String _content;
@@ -24,6 +25,7 @@ class VoceTextBubble extends StatelessWidget {
   VoceTextBubble(
       {super.key,
       required this.chatMsgM,
+      this.enableBubble = false,
       this.isSelfMessage = false,
       this.maxLines}) {
     _edited = chatMsgM.reactionData?.hasEditedText ?? false;
@@ -138,29 +140,56 @@ class VoceTextBubble extends StatelessWidget {
       text: textSpan,
     );
 
-    if (!isSelfMessage) {
+    if (!enableBubble) {
       return child;
     }
 
+    return VoceMessageBubbleFrame(
+      isSelfMessage: isSelfMessage,
+      child: child,
+    );
+  }
+}
+
+class VoceMessageBubbleFrame extends StatelessWidget {
+  final bool isSelfMessage;
+  final Widget child;
+
+  const VoceMessageBubbleFrame({
+    super.key,
+    required this.isSelfMessage,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bubbleColor =
+        isSelfMessage ? AppColors.chatSelfBubbleBg : AppColors.chatOtherBubbleBg;
+
     return Padding(
-      padding: const EdgeInsets.only(right: 8),
+      padding: EdgeInsets.only(
+        left: isSelfMessage ? 0 : 8,
+        right: isSelfMessage ? 8 : 0,
+      ),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFF94ED6F),
+              color: bubbleColor,
               borderRadius: BorderRadius.circular(4),
             ),
             child: child,
           ),
-          const Positioned(
-            right: -8,
+          Positioned(
+            left: isSelfMessage ? null : -8,
+            right: isSelfMessage ? -8 : null,
             top: 12,
             child: CustomPaint(
-              size: Size(8, 10),
-              painter: _SelfMessageBubbleTailPainter(),
+              size: const Size(8, 10),
+              painter: _MessageBubbleTailPainter(
+                  color: bubbleColor, isSelfMessage: isSelfMessage),
             ),
           ),
         ],
@@ -169,26 +198,39 @@ class VoceTextBubble extends StatelessWidget {
   }
 }
 
-class _SelfMessageBubbleTailPainter extends CustomPainter {
-  const _SelfMessageBubbleTailPainter();
+class _MessageBubbleTailPainter extends CustomPainter {
+  final Color color;
+  final bool isSelfMessage;
 
-  static const Color _color = Color(0xFF94ED6F);
+  const _MessageBubbleTailPainter(
+      {required this.color, required this.isSelfMessage});
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = _color
+      ..color = color
       ..style = PaintingStyle.fill;
 
-    final path = Path()
-      ..moveTo(0, 0)
-      ..lineTo(size.width, size.height / 2)
-      ..lineTo(0, size.height)
-      ..close();
+    final path = Path();
+    if (isSelfMessage) {
+      path
+        ..moveTo(0, 0)
+        ..lineTo(size.width, size.height / 2)
+        ..lineTo(0, size.height);
+    } else {
+      path
+        ..moveTo(size.width, 0)
+        ..lineTo(0, size.height / 2)
+        ..lineTo(size.width, size.height);
+    }
+    path.close();
 
     canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _MessageBubbleTailPainter oldDelegate) {
+    return oldDelegate.color != color ||
+        oldDelegate.isSelfMessage != isSelfMessage;
+  }
 }

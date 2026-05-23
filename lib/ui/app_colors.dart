@@ -35,6 +35,10 @@ class AppColors {
 
   static Color barBg = Color.fromRGBO(249, 249, 249, 0.94);
 
+  // Chat message bubbles.
+  static Color chatSelfBubbleBg = Color(0xFF94ED6F);
+  static Color chatOtherBubbleBg = Color(0xFFEEEEF0);
+
   // For Auth pages.
   static Color centerColor = Color.fromRGBO(0, 113, 236, 1);
   static Color midColor = const Color.fromRGBO(162, 201, 243, 1);
