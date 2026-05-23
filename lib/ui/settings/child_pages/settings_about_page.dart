@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cocochat_app/l10n/app_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:cocochat_app/api/lib/admin_system_api.dart';
+import 'package:cocochat_app/api/models/admin/system/check_update_result.dart';
 import 'package:cocochat_app/app.dart';
 import 'package:cocochat_app/shared_funcs.dart';
 import 'package:cocochat_app/ui/app_alert_dialog.dart';
@@ -131,24 +132,35 @@ class SettingsAboutPage extends StatelessWidget {
   void _checkUpdates(BuildContext context) async {
     _isCheckingUpdates.value = true;
 
-    final versionRes = await AdminSystemApi().getServerVersion();
+    try {
+      final platform = Platform.isIOS ? "ios" : "android";
+      final res =
+          await AdminSystemApi().checkUpdate(platform: platform);
 
-    if (versionRes.statusCode != 200 || versionRes.data == null) {
+      if (res.statusCode != 200 || res.data == null) {
+        _isCheckingUpdates.value = false;
+        if (!context.mounted) return;
+        _showUpToDate(context);
+        return;
+      }
+
+      final serverVersion = res.data!.versionCode;
+      final packageInfo = await PackageInfo.fromPlatform();
+      final localVersion = int.tryParse(packageInfo.buildNumber) ?? 0;
+
+      if (serverVersion > localVersion) {
+        if (!context.mounted) return;
+        _showUpdates(context, res.data!);
+      } else {
+        if (!context.mounted) return;
+        _showUpToDate(context);
+      }
+    } catch (e) {
+      App.logger.severe(e);
       _isCheckingUpdates.value = false;
       if (!context.mounted) return;
       _showNetworkError(context);
       return;
-    }
-
-    final latestVersion = versionRes.data!;
-    final localVersion = await _getAppVersion();
-
-    if (latestVersion.compareTo(localVersion) > 0) {
-      if (!context.mounted) return;
-      _showUpdates(context, latestVersion);
-    } else {
-      if (!context.mounted) return;
-      _showUpToDate(context);
     }
 
     _isCheckingUpdates.value = false;
@@ -197,8 +209,14 @@ class SettingsAboutPage extends StatelessWidget {
         ]);
   }
 
-  void _showUpdates(BuildContext context, String latestVersionNum) {
+  void _showUpdates(BuildContext context, CheckUpdateResult updateInfo) {
     List<AppAlertDialogAction> actions = [];
+    if (updateInfo.fileUrl != null && updateInfo.fileUrl!.isNotEmpty) {
+      actions.add(AppAlertDialogAction(
+          text: AppLocalizations.of(context)!.download,
+          action:
+              (() => SharedFuncs.appLaunchUrl(Uri.parse(updateInfo.fileUrl!)))));
+    }
     if (Platform.isIOS) {
       actions.add(AppAlertDialogAction(
           text: "App Store",
@@ -220,11 +238,12 @@ class SettingsAboutPage extends StatelessWidget {
           Navigator.of(context).pop();
         })));
 
+    final versionLabel = updateInfo.versionName ?? updateInfo.versionCode.toString();
     showAppAlert(
         context: context,
         title: "Update Available",
         content:
-            "A newer version $latestVersionNum is available. Please check first if your server version is up-to-date.",
+            "A newer version $versionLabel is available. Please check first if your server version is up-to-date.",
         actions: actions);
   }
 

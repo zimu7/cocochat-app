@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:cocochat_app/api/lib/dio_util.dart';
+import 'package:cocochat_app/api/models/admin/system/check_update_result.dart';
 import 'package:cocochat_app/api/models/admin/system/sys_common_info.dart';
 import 'package:cocochat_app/api/models/admin/system/sys_org_info.dart';
 import 'package:cocochat_app/app.dart';
@@ -30,6 +31,27 @@ class AdminSystemApi {
 
     if (res.statusCode == 200 && res.data != null) {
       newRes.data = res.data;
+    }
+    return newRes;
+  }
+
+  Future<Response<CheckUpdateResult>> checkUpdate(
+      {required String platform}) async {
+    final dio = DioUtil(baseUrl: _baseUrl);
+    final res =
+        await dio.get("/check_update", queryParameters: {"platform": platform});
+
+    var newRes = Response<CheckUpdateResult>(
+        headers: res.headers,
+        requestOptions: res.requestOptions,
+        isRedirect: res.isRedirect,
+        statusCode: res.statusCode,
+        statusMessage: res.statusMessage,
+        redirects: res.redirects,
+        extra: res.extra);
+
+    if (res.statusCode == 200 && res.data != null && res.data is Map) {
+      newRes.data = CheckUpdateResult.fromJson(res.data);
     }
     return newRes;
   }

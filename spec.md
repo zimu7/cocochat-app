@@ -17,6 +17,41 @@ admin_system_api.dart — 新增 getChangeLog() 方法，请求 {serverUrl}/api/
 
 
 
+修改 _checkUpdates 方法的逻辑，不要调用 _getChangeLog() 获取变更日志了，而是调用 /api/admin/system/check_update 方法检查最新版本信息，安卓平台需要带 platform=android 参数，ios平台带 platform=ios，如果该接口返回内容为空，则提示无版本更新。如果网络异常，则提示网络异常。 如果获取成功，则比较结果中 version_code 与本地存储的 versionCode 值谁大，这个version_code 值是一个int64的值。 如果接口返回的version_code 值更大，则表示有更新的版本，可以提示用户是否更新。否则提示无版本更新。 接口返回的内容如下所示：
+
+```json
+ {
+    "version_code": 1,
+    "version_name": "v0.1.3",
+    "build_time": "2026-05-23 14:33:32",
+    "description": "android v0.1.3",
+    "file_url": "https://chat.zimu.pub/apk/cocochat-release.apk"
+  },
+```
+
+
+
+ 变更内容
+
+  check_update_result.dart — 修复模型字段映射
+  - 将字段 version 重命名为 versionCode
+  - 将 JSON 映射从 json['version'] 修正为 json['version_code']，与接口返回的字段名匹配
+
+  settings_about_page.dart — 更新字段引用
+  - res.data!.version → res.data!.versionCode
+  - updateInfo.version.toString() → updateInfo.versionCode.toString()
+
+  当前 _checkUpdates 逻辑
+
+  1. 根据平台调用 /api/admin/system/check_update，安卓带 platform=android，iOS 带 platform=ios
+  2. 接口返回内容为空/状态码非200 → 提示已是最新版本
+  3. 网络异常 → 提示网络异常
+  4. 获取成功 → 比较接口返回的 version_code 与本地的 buildNumber（对应 Android 的 versionCode）
+  5. 接口的 version_code 更大 → 弹窗提示有新版本可更新
+  6. 否则 → 提示已是最新版本
+
+
+
 
 
 ## 9、优化日期展示
