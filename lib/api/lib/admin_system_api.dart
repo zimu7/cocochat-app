@@ -111,6 +111,25 @@ class AdminSystemApi {
     );
   }
 
+  Future<Response<String>> getChangeLog({bool enableRetry = false}) async {
+    final dio = DioUtil(baseUrl: _baseUrl, enableRetry: enableRetry);
+    final res = await dio.get("/change_log");
+
+    var newRes = Response<String>(
+        headers: res.headers,
+        requestOptions: res.requestOptions,
+        isRedirect: res.isRedirect,
+        statusCode: res.statusCode,
+        statusMessage: res.statusMessage,
+        redirects: res.redirects,
+        extra: res.extra);
+
+    if (res.statusCode == 200 && res.data != null) {
+      newRes.data = res.data.toString();
+    }
+    return newRes;
+  }
+
   Future<Response<bool>> getInitialized({bool enableRetry = false}) async {
     final dio = DioUtil(baseUrl: _baseUrl, enableRetry: enableRetry);
     dio.options.connectTimeout = Duration(milliseconds: 5000);

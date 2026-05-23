@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:cocochat_app/ui/app_colors.dart';
 import 'package:cocochat_app/ui/app_text_styles.dart';
-import 'package:cocochat_app/ui/settings/changelog_models.dart/change_log.dart';
 
 class SettingsChangelogPage extends StatelessWidget {
-  final ChangeLog? changeLog;
+  final String? changeLogText;
 
-  const SettingsChangelogPage({super.key, required this.changeLog});
+  const SettingsChangelogPage({super.key, required this.changeLogText});
 
   @override
   Widget build(BuildContext context) {
@@ -32,33 +30,14 @@ class SettingsChangelogPage extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    if (changeLog == null || changeLog!.logs.isEmpty) {
-      return Text("Can't find changelog in coco.chat.");
-    } else {
-      return ListView.separated(
-        itemCount: changeLog!.logs.length,
-        itemBuilder: (context, index) {
-          final historyItem = changeLog!.logs[index];
-
-          final version = historyItem.version;
-          final date = DateTime.fromMillisecondsSinceEpoch(historyItem.time);
-          final dateString = DateFormat('MM/dd/yyyy').format(date);
-          final logs = historyItem.updates;
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text("$version\t($dateString)",
-                  style: AppTextStyles.titleLarge),
-              subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: List.generate(logs.length, (i) {
-                    return Text(logs[i]);
-                  })),
-            ),
-          );
-        },
-        separatorBuilder: (context, index) => Divider(),
+    if (changeLogText == null || changeLogText!.isEmpty) {
+      return Center(
+        child: Text("Can't find changelog in coco.chat."),
       );
     }
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Text(changeLogText!, style: AppTextStyles.labelLarge),
+    );
   }
 }

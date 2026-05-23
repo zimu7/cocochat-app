@@ -1,17 +1,15 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cocochat_app/l10n/app_localizations.dart';
-import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:cocochat_app/api/lib/admin_system_api.dart';
 import 'package:cocochat_app/app.dart';
 import 'package:cocochat_app/shared_funcs.dart';
 import 'package:cocochat_app/ui/app_alert_dialog.dart';
 import 'package:cocochat_app/ui/app_colors.dart';
 import 'package:cocochat_app/ui/app_text_styles.dart';
-import 'package:cocochat_app/ui/settings/changelog_models.dart/change_log.dart';
 import 'package:cocochat_app/ui/settings/child_pages/settings_changelog_page.dart';
 import 'package:cocochat_app/ui/widgets/app_icon.dart';
 import 'package:cocochat_app/ui/widgets/banner_tile/banner_tile.dart';
@@ -133,16 +131,16 @@ class SettingsAboutPage extends StatelessWidget {
   void _checkUpdates(BuildContext context) async {
     _isCheckingUpdates.value = true;
 
-    final changeLog = await _getChangeLog();
+    final versionRes = await AdminSystemApi().getServerVersion();
 
-    if (changeLog == null) {
+    if (versionRes.statusCode != 200 || versionRes.data == null) {
       _isCheckingUpdates.value = false;
       if (!context.mounted) return;
       _showNetworkError(context);
       return;
     }
 
-    final latestVersion = changeLog.latest.version;
+    final latestVersion = versionRes.data!;
     final localVersion = await _getAppVersion();
 
     if (latestVersion.compareTo(localVersion) > 0) {
@@ -160,12 +158,12 @@ class SettingsAboutPage extends StatelessWidget {
     _isFetchingLog.value = true;
 
     try {
-      final value = await _getChangeLog();
+      final text = await _getChangeLog();
       _isFetchingLog.value = false;
-      if (value != null) {
+      if (text != null) {
         if (!context.mounted) return;
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => SettingsChangelogPage(changeLog: value)));
+            builder: (context) => SettingsChangelogPage(changeLogText: text)));
       }
     } catch (e) {
       App.logger.severe(e);
@@ -173,20 +171,13 @@ class SettingsAboutPage extends StatelessWidget {
     }
   }
 
-  Future<ChangeLog?> _getChangeLog() async {
+  Future<String?> _getChangeLog() async {
     try {
-      const logUrl = "https://cocochat.s3.amazonaws.com/changelog.json";
-      final res = await http.get(Uri.parse(logUrl));
-      if (res.statusCode != 200) {
-        App.logger.severe("Failed to fetch changelog: ${res.statusCode}");
-        return null;
+      final res = await AdminSystemApi().getChangeLog();
+      if (res.statusCode == 200 && res.data != null) {
+        return res.data;
       }
-      final contentType = res.headers['content-type'];
-      if (contentType != null && contentType.contains('xml')) {
-        App.logger.severe("Received XML instead of JSON from changelog URL");
-        return null;
-      }
-      return ChangeLog.fromJson(jsonDecode(res.body));
+      App.logger.severe("Failed to fetch changelog: ${res.statusCode}");
     } catch (e) {
       App.logger.severe(e);
     }

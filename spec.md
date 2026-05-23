@@ -1,3 +1,24 @@
+## 10、检查更新、变更日志完成
+
+修改变更日志的逻辑：
+
+修改点击“更新日志”后的逻辑，修改第三步_getChangeLog的逻辑，不要从 https://cocochat.s3.amazonaws.com/changelog.json 获取数据，从 /api/admin/system/change_log 接口获取，该接口返回的内容就是文本信息，直接展示这些文本信息即可，不用解析json。
+
+admin_system_api.dart — 新增 getChangeLog() 方法，请求 {serverUrl}/api/admin/system/change_log，返回纯文本。
+
+  settings_about_page.dart：
+  - _getChangeLog — 不再请求 S3 JSON，改为调用 AdminSystemApi().getChangeLog() 获取文本
+  - _goToChangelog — 传递 changeLogText（String）给详情页
+  - _checkUpdates — 改为调用 AdminSystemApi().getServerVersion() 获取最新版本号做比较
+  - 移除了 dart:convert、http、change_log.dart 三个不再需要的 import
+
+  settings_changelog_page.dart — 简化了，不再接收 ChangeLog 对象和解析 JSON，改为接收 String? 并用 SingleChildScrollView
+   + Text 直接展示文本。
+
+
+
+
+
 ## 9、优化日期展示
 
 1、消息列表页面，在中文环境下，如果是今天的，就写类似于： 今天 14:32，注意时间用24小时制。如果是昨天的，就写类似于： 昨天 14：32，再往前如果是本年的，就写类似于： 5月2日，本年的不要年份。如果是去年或更早的，就写：2025年4月2日，不要时分秒。
