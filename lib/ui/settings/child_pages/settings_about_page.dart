@@ -20,11 +20,6 @@ class SettingsAboutPage extends StatelessWidget {
   final ValueNotifier<bool> _isCheckingUpdates = ValueNotifier(false);
   final ValueNotifier<bool> _isFetchingLog = ValueNotifier(false);
 
-  final appStoreUrl = "https://apps.apple.com/app/cocochat/idxxxxxxx";
-  final googlePlayUrl =
-      "https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=net.winbomb.cocochat.app";
-  final cocochatUrl = "https://coco.chat/";
-
   SettingsAboutPage({super.key});
 
   @override
@@ -210,30 +205,17 @@ class SettingsAboutPage extends StatelessWidget {
   }
 
   void _showUpdates(BuildContext context, CheckUpdateResult updateInfo) {
+    final i18n = AppLocalizations.of(context)!;
     List<AppAlertDialogAction> actions = [];
     if (updateInfo.fileUrl != null && updateInfo.fileUrl!.isNotEmpty) {
       actions.add(AppAlertDialogAction(
-          text: AppLocalizations.of(context)!.download,
+          text: i18n.download,
           action:
               (() => SharedFuncs.appLaunchUrl(Uri.parse(updateInfo.fileUrl!)))));
     }
-    if (Platform.isIOS) {
-      actions.add(AppAlertDialogAction(
-          text: "App Store",
-          action: (() => SharedFuncs.appLaunchUrl(Uri.parse(appStoreUrl)))));
-    } else if (Platform.isAndroid) {
-      actions.addAll([
-        AppAlertDialogAction(
-            text: "Play Store",
-            action: (() => SharedFuncs.appLaunchUrl(Uri.parse(googlePlayUrl)))),
-        AppAlertDialogAction(
-            text: "Coco.Chat",
-            action: (() => SharedFuncs.appLaunchUrl(Uri.parse(cocochatUrl))))
-      ]);
-    }
 
     actions.add(AppAlertDialogAction(
-        text: AppLocalizations.of(context)!.cancel,
+        text: i18n.cancel,
         action: (() {
           Navigator.of(context).pop();
         })));
@@ -241,9 +223,8 @@ class SettingsAboutPage extends StatelessWidget {
     final versionLabel = updateInfo.versionName ?? updateInfo.versionCode.toString();
     showAppAlert(
         context: context,
-        title: "Update Available",
-        content:
-            "A newer version $versionLabel is available. Please check first if your server version is up-to-date.",
+        title: i18n.aboutPageUpdateAvailableTitle,
+        content: i18n.aboutPageUpdateAvailableContent(versionLabel),
         actions: actions);
   }
 

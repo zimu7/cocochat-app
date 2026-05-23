@@ -308,6 +308,8 @@
     "aboutPageChangeLog":"changelog",
     "aboutPageUpdateTitleUpToDate":"Current Version is Up-to-date",
     "aboutPageUpdateTitleUpToDateContent":"You are using the latest CocoChat App.",
+    "aboutPageUpdateAvailableTitle":"Update Available",
+    "aboutPageUpdateAvailableContent":"A newer version {versionLabel} is available. Please check first if your server version is up-to-date.",
 
     "firebaseEnable": "Enable",
 

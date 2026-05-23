@@ -308,6 +308,8 @@
     "aboutPageChangeLog":"更新日志",
     "aboutPageUpdateTitleUpToDate":"此版本为最新",
     "aboutPageUpdateTitleUpToDateContent":"您使用的是最新版本的 CocoChat。",
+    "aboutPageUpdateAvailableTitle":"发现新版本",
+    "aboutPageUpdateAvailableContent":"发现新版本 {versionLabel}。请先确认您的服务器版本是否是最新。",
 
     "firebaseEnable": "启用",
 
