@@ -53,29 +53,35 @@ extension TimeHelper on DateTime {
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = DateTime(now.year, now.month, now.day - 1);
     final localtime = toLocal();
+    final dateToCheck =
+        DateTime(localtime.year, localtime.month, localtime.day);
+    final time = localtime.toTime24Str();
 
-    final dateToCheck = DateTime(year, month, day);
+    if (Localizations.localeOf(context).languageCode == "zh") {
+      if (dateToCheck == today) {
+        return time;
+      } else if (dateToCheck == yesterday) {
+        return "昨天 $time";
+      } else if (localtime.year == now.year) {
+        return "${localtime.month}月${localtime.day}日 $time";
+      } else {
+        return "${localtime.year}年${localtime.month}月${localtime.day}日 $time";
+      }
+    }
+
     if (dateToCheck == today) {
-      final hour = localtime.hour.toString();
-      final minute = localtime.minute.toString().padLeft(2, '0');
-      return "${AppLocalizations.of(context)!.today} $hour:$minute";
+      return "${AppLocalizations.of(context)!.today} $time";
     } else if (dateToCheck == yesterday) {
-      final hour = localtime.hour.toString();
-      final minute = localtime.minute.toString().padLeft(2, '0');
-      return "${AppLocalizations.of(context)!.yesterday} $hour:$minute";
+      return "${AppLocalizations.of(context)!.yesterday} $time";
     } else if (dateToCheck.year == localtime.year) {
       final month = localtime.month.toString();
       final day = localtime.day.toString();
-      final hour = localtime.hour.toString();
-      final minute = localtime.minute.toString().padLeft(2, '0');
-      return "$month/$day $hour:$minute";
+      return "$month/$day $time";
     } else {
       final year = localtime.year.toString();
       final month = localtime.month.toString();
       final day = localtime.day.toString();
-      final hour = localtime.hour.toString();
-      final minute = localtime.minute.toString().padLeft(2, '0');
-      return "$month/$day/$year $hour:$minute";
+      return "$month/$day/$year $time";
     }
   }
 
@@ -133,6 +139,6 @@ extension ChatTimeDisplay on int {
 
   String toChatTime24StrEn(BuildContext context) {
     final messageTime = DateTime.fromMillisecondsSinceEpoch(this).toLocal();
-    return messageTime.toTime24StringEn(context);
+    return messageTime.toChatTime24StrEn(context);
   }
 }
